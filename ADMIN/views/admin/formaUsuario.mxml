@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="374" height="270"
+	 title="Nuevo Usuario" creationComplete="Init();" showCloseButton="true" close="{PopUpManager.removePopUp(this);}"
+	  >
+	 <mx:Metadata>
+		[Event(name="Saved")]
+	</mx:Metadata>
+	 <mx:Script>
+	 	<![CDATA[
+	 		import mx.rpc.events.FaultEvent;
+	 		import mx.rpc.events.ResultEvent;
+	 		import mx.rpc.remoting.RemoteObject;
+	 		import mx.managers.CursorManager;
+	 		import mx.managers.CursorManagerPriority;
+	 		import obj.CAEM.*;
+	 		import mx.controls.Alert;
+	 		import mx.managers.PopUpManager;
+	 		
+	 		[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+			
+			[Bindable] 		
+		 	private var xmlTipos:XML=new XML("<X><TIPO NAME='ADMINISTRADOR' ID='A'/><TIPO NAME='MUNICIPIO' ID='M'/><TIPO NAME='GERENCIA' ID='G'/><TIPO NAME='REPORTE TOTAL' ID='T'/><TIPO NAME='OBSERVADOR' ID='O'/></X>");
+		 	
+		 	private function Init():void{
+	 			loadGerencias();
+	 		}
+	 		
+	 		private function loadGerencias():void{
+	 			var ro:RemoteObject=new RemoteObject('zend');
+	 			ro.source='catalogosGeograficos';
+	 			ro.addEventListener(ResultEvent.RESULT, loadGerenciasResultHandler);
+	 			ro.addEventListener(FaultEvent.FAULT, loadGerenciasFaultHandler);
+	 			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	 			ro.loadGerencias();
+	 		}
+	 		
+	 		private function loadGerenciasResultHandler(event:ResultEvent):void{
+	 			cmbGerencia.dataProvider=event.result as Array;
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 		}
+	 		
+	 		private function loadGerenciasFaultHandler(event:FaultEvent):void{
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			Alert.show(event.fault.toString(),"Error");
+	 		}
+	 		
+	 		private function addUsr():void{
+	 			var usr:usuarioCAEM=new usuarioCAEM();
+	 			
+	 			usr.email=txtEmail.text;
+	 			usr.login=txtLogin.text;
+	 			usr.clear_pass=txtPass.text;
+	 			usr.id_municipio=(cmbMunicipio.selectedItem as municipioCAEM).id_municipio;
+	 			usr.name=txtName.text;
+	 			usr.tipo=(cmbTipo.selectedItem as XML).@ID;
+	 			
+	 			var ro:RemoteObject=new RemoteObject('zend');
+	 			ro.source='userController';
+	 			ro.addEventListener(ResultEvent.RESULT, addResultHandler);
+	 			ro.addEventListener(FaultEvent.FAULT, addFaultHandler);
+	 			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	 			ro.addUser(usr);
+	 		}
+	 		
+	 		private function addResultHandler(event:ResultEvent):void{
+	 			//Alert.show(event.result.toString(),"Error");
+	 			var e:Event=new Event('Saved');
+	 			this.dispatchEvent(e);
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			PopUpManager.removePopUp(this);
+	 		}
+	 		
+	 		private function addFaultHandler(event:FaultEvent):void{
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			Alert.show(event.fault.toString(),"Error");
+	 		}
+	 		
+	 		private function validaTipo():void{
+	 			var x:XML=cmbTipo.selectedItem as XML;
+	 			
+	 			if(x.@ID=='A'||x.@ID=='T'||x.@ID=='O'){
+	 				cmbGerencia.visible=false;
+	 				cmbGerencia.enabled=false;
+	 				cmbMunicipio.visible=false;
+	 				cmbMunicipio.enabled=false;
+	 				labGerencia.visible=false;
+	 				labMunicipio.visible=false;
+	 			}
+	 			if(x.@ID=='G'){
+	 				cmbGerencia.visible=true;
+	 				cmbGerencia.enabled=true;
+	 				cmbMunicipio.visible=false;
+	 				cmbMunicipio.enabled=false;
+	 				labGerencia.visible=true;
+	 				labMunicipio.visible=false;
+	 			}
+	 			if(x.@ID=='M'){
+	 				cmbGerencia.visible=true;
+	 				cmbGerencia.enabled=true;
+	 				cmbMunicipio.visible=true;
+	 				cmbMunicipio.enabled=true;
+	 				labGerencia.visible=true;
+	 				labMunicipio.visible=true;
+	 			}
+	 		}
+	 	]]>
+	 </mx:Script>
+	<mx:Label x="10" y="10" text="Nombre:"/>
+	<mx:Label x="10" y="36" text="Login:"/>
+	<mx:Label x="10" y="62" text="Contraseña:"/>
+	<mx:Label x="10" y="118" text="Gerencia:" id="labGerencia" visible="false"/>
+	<mx:Label x="10" y="144" text="Municipio:" id="labMunicipio" visible="false"/>
+	<mx:Label x="10" y="170" text="E-mail:"/>
+	<mx:Label x="10" y="90" text="Tipo:"/>
+	<mx:TextInput x="92" y="8" id="txtName" width="252"/>
+	<mx:TextInput x="92" y="34" id="txtLogin" width="252"/>
+	<mx:TextInput x="92" y="60" id="txtPass" width="252"/>
+	<mx:ComboBox x="92" y="88" id="cmbTipo" width="252" dataProvider="{xmlTipos..TIPO}" labelField="@NAME"
+		 change="validaTipo()"/>
+	<mx:ComboBox x="92" y="116" id="cmbGerencia" labelField="name" width="252" visible="false" enabled="false"/>
+	<mx:ComboBox x="92" y="142" id="cmbMunicipio" labelField="name" dataProvider="{(cmbGerencia.selectedItem as gerenciaCAEM).municipios}" width="252" visible="false" enabled="false"/>
+	<mx:TextInput x="92" y="168" id="txtEmail" width="252"/>
+	<mx:Button label="Aceptar" right="10" bottom="10" click="addUsr();"/>
+	<mx:Button label="Cancelar" right="90" bottom="10" click="PopUpManager.removePopUp(this);"/>
+	
+</mx:TitleWindow>

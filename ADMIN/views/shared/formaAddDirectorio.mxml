@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="290" height="270"
+	 showCloseButton="true" close="PopUpManager.removePopUp(this);" title="Nuevo contacto">
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.remoting.mxml.RemoteObject;
+			import obj.CAEM.directorioItemCAEM;
+			import obj.CAEM.municipioCAEM;
+			import mx.managers.CursorManagerPriority;
+			import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+			import mx.controls.Alert;
+			
+			
+			[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+		
+			public var municipio:municipioCAEM;
+			
+			private function addItem():void{
+				var item:directorioItemCAEM=new directorioItemCAEM();
+				item.id_municipio=municipio.id_municipio;
+				item.dom=txtDom.text;
+				item.name=txtName.text;
+				item.tel=txtTel.text;
+				
+				var ro:RemoteObject=new RemoteObject('zend');
+				ro.source='catalogosGenerales';
+				ro.addEventListener(ResultEvent.RESULT,addResultHandler);
+				ro.addEventListener(FaultEvent.FAULT,faultHandler);
+				CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+				ro.addDirectorioItem(item);
+			}
+			
+			private function addResultHandler(event:ResultEvent):void{
+				municipio.directorio=event.result as Array;
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				Alert.show("Elemento Guardado","OK");
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function faultHandler(event:FaultEvent):void{
+				Alert.show(event.fault.message,"Error");	
+			}
+		]]>
+	</mx:Script>
+	<mx:Label x="10" y="10" text="Nombre"/>
+	<mx:Label x="10" y="36" text="Domicilio"/>
+	<mx:TextInput x="75" y="8" width="185" id="txtName"/>
+	<mx:TextArea x="75" y="35" width="185" height="72" id="txtDom"/>
+	<mx:Label x="10" y="116" text="Telefonos"/>
+	<mx:TextArea x="75" y="115" width="185" height="72" id="txtTel"/>
+	<mx:Button y="195" label="Guardar" right="10" click="addItem()"/>
+	<mx:Button y="195" label="Cancelar" right="90" click="PopUpManager.removePopUp(this);"/>
+</mx:TitleWindow>

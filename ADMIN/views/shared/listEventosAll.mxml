@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:obj="obj.*" 
+	 verticalScrollPolicy="off" width="100%" height="100%">
+	 <mx:states>
+	 	 <mx:State name="gerencia">
+	 	 	 <mx:RemoveChild target="{label3}"/>
+	 	 	 <mx:RemoveChild target="{cmbCuenca}"/>
+	 	 	 <mx:SetProperty target="{label1}" name="x" value="10"/>
+	 	 	 <mx:SetProperty target="{label1}" name="y" value="12"/>
+	 	 	 <mx:SetProperty target="{cmbMunicipio}" name="x" value="79"/>
+	 	 	 <mx:SetProperty target="{cmbMunicipio}" name="y" value="10"/>
+	 	 	 <mx:SetProperty target="{label2}" name="x" value="319"/>
+	 	 	 <mx:SetProperty target="{label2}" name="y" value="12"/>
+	 	 	 <mx:SetProperty target="{cmbSitio}" name="x" value="361"/>
+	 	 	 <mx:SetProperty target="{cmbSitio}" name="y" value="10"/>
+	 	 	 <mx:SetProperty target="{spacer1}" name="width" value="8"/>
+	 	 	 
+	 	 </mx:State>
+	 	 <mx:State name="usuario" basedOn="gerencia">
+	 	 	 <mx:RemoveChild target="{cmbMunicipio}"/>
+	 	 	 <mx:RemoveChild target="{label1}"/>
+	 	 	 <mx:SetProperty target="{label2}" name="x" value="10"/>
+	 	 	 <mx:SetProperty target="{cmbSitio}" name="x" value="52"/>
+	 	 	 <mx:SetProperty target="{dgEventos}" name="y" value="38"/>
+	 	 	 <mx:RemoveChild target="{hbox1}"/>
+	 	 </mx:State>
+	 </mx:states>
+	 <mx:Metadata>
+		[Event(name="Ubicar", type="obj.eventCoorde")]
+	</mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+			import obj.geo.Mapa;			
+			import obj.xugarWindowLite;
+			import mx.controls.dataGridClasses.DataGridColumn;
+	
+			import mx.managers.CursorManager;
+			import mx.controls.Alert;
+			import mx.rpc.remoting.RemoteObject;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.managers.PopUpManager;
+			import mx.managers.CursorManagerPriority;	
+		   	import obj.CAEM.*;
+		   	import obj.eventCoorde;
+    
+		    [Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+		    
+		 
+		    
+		    [Bindable]
+		    	private var cuencasArray:Array=new Array();
+		    [Bindable]
+		    	private var municipiosArray:Array=new Array();
+		    [Bindable]
+		    	private var sitiosArray:Array=new Array();
+		    
+		    [Bindable]
+		    	private var eventosResult:Array=new Array();
+		    [Bindable]
+		    	private var eventosDatagrid:Array=new Array();				
+		    
+		    public var mapa:Mapa;
+		    
+			public var usuario:usuarioCAEM;
+    	
+		    public function Init():void{    	
+		    	if(usuario.tipo=='O'){
+		   			 btnAEvento.visible=false;   			 
+		    	}
+		    	
+		    	if(usuario.tipo=='A'||usuario.tipo=='T'||usuario.tipo=='O'){
+					loadCuencas();
+				}else{
+					if(usuario.tipo=='M'){
+						this.currentState='usuario';
+						loadSitios();				
+					}else{
+						this.currentState='gerencia';
+						loadMunicipios();
+					}			    			
+				}
+		    	loadEventos();
+		    }
+    
+    private function loadCuencas():void{		    	
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.loadCuencasSitios();
+    }
+	    		   
+	    
+    private function loadCuencasDataListener(event:ResultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		cuencasArray=event.result as Array; 
+		
+		var noCuenca:cuencaCAEM=new cuencaCAEM();
+		
+		noCuenca.id_cuenca="0";
+		noCuenca.name="TODAS LAS CUENCAS";
+		noCuenca.municipios=new Array();
+		cuencasArray.unshift(noCuenca);
+		
+		for each(var c:cuencaCAEM in cuencasArray){
+			var noMunicipio:municipioCAEM=new municipioCAEM();
+			noMunicipio.id_municipio="0";
+			noMunicipio.name="TODOS LOS MUNICIPIOS";
+			noMunicipio.sitios=new Array();
+			c.municipios.unshift(noMunicipio);
+			for each(var m:municipioCAEM in c.municipios){
+				var noSitio:sitioCAEM=new sitioCAEM();
+				noSitio.id_sitio="0";
+				noSitio.name="TODOS LOS SITIOS";
+				m.sitios.unshift(noSitio);
+			}
+			
+		}
+		                       
+		cmbCuenca.dataProvider=cuencasArray;								
+	}
+    
+    private function loadSitios():void{		    	
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadSitiosDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.loadSitios(usuario.id_municipio);
+    }
+    		   
+    
+    private function loadSitiosDataListener(event:ResultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);                         
+		sitiosArray=event.result as Array;
+		var noSitio:sitioCAEM=new sitioCAEM();
+		noSitio.id_sitio="0";
+		noSitio.name="TODOS LOS SITIOS";
+		sitiosArray.unshift(noSitio);
+		cmbSitio.dataProvider=sitiosArray;								
+	}
+	
+ 	private function loadMunicipios():void{		    	
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadMunicipiosDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.loadMunicipiosGerenciaSitios(usuario.id_gerencia);
+    }
+    		   
+    
+    private function loadMunicipiosDataListener(event:ResultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		
+		municipiosArray=event.result as Array;
+		
+		var noMunicipio:municipioCAEM=new municipioCAEM();
+		noMunicipio.id_municipio="0";
+		noMunicipio.name="TODOS LOS MUNICIPIOS";
+		noMunicipio.sitios=new Array();
+		municipiosArray.unshift(noMunicipio);
+		for each(var m:municipioCAEM in municipiosArray){
+			var noSitio:sitioCAEM=new sitioCAEM();
+			noSitio.id_sitio="0";
+			noSitio.name="TODOS LOS SITIOS";
+			m.sitios.unshift(noSitio);
+		}
+		                         
+		cmbMunicipio.dataProvider=municipiosArray;								
+	}
+    
+    
+    
+    private function loadEventos(event:Event=null):void{
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='eventoController';
+    	ro.addEventListener(ResultEvent.RESULT,loadEventosDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	if(usuario.tipo=='A' || usuario.tipo=='O'||usuario.tipo=='T'){
+    		ro.loadEventos();
+    	}else{
+    		ro.loadEventos(usuario.uri_user);
+    	}	    	
+    	 
+    }
+                      
+	private function loadEventosDataListener(event:ResultEvent):void {
+		eventosResult=event.result as Array;
+		eventosDatagrid=eventosResult;                         
+		
+		dgEventos.dataProvider=eventosDatagrid;
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		filtraEventos();	
+	}
+   
+   private function filtraEventos():void{
+   		CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+   		eventosDatagrid=new Array();
+   		
+   		var id_cuenca:String;
+   		if(usuario.tipo=='A'||usuario.tipo=='O'||usuario.tipo=='T'){
+   			id_cuenca=(cmbCuenca.selectedItem as cuencaCAEM).id_cuenca;
+   		}else{
+   			id_cuenca="0";
+   		}	
+   		var id_municipio:String;
+   		if(usuario.tipo=='G'||usuario.tipo=='A'||usuario.tipo=='O'||usuario.tipo=='T'){
+   			id_municipio=(cmbMunicipio.selectedItem as municipioCAEM).id_municipio;
+   		}else{
+   			id_municipio='0';
+   		}
+   		var id_sitio:String=(cmbSitio.selectedItem as sitioCAEM).id_sitio;
+   		
+   		for each(var e:eventoCAEM in eventosResult){
+   			if(e.id_cuenca==id_cuenca||id_cuenca=='0'){
+   				if(e.id_municipio==id_municipio||id_municipio=='0'){
+   					if(e.id_sitio==id_sitio||id_sitio=='0'){
+   						eventosDatagrid.push(e);
+   					}
+   				}	
+   			}	
+   		}
+   		
+   		dgEventos.dataProvider=eventosDatagrid;
+   		CursorManager.removeCursor(CursorManager.currentCursorID);
+   }
+   
+	private function faultListener(event:FaultEvent):void {
+		Alert.show(event.fault.message, "Error");
+	}
+	
+	private function causaLabelFunction(o:Object, dgc:DataGridColumn):String{
+		var s:String='';
+				
+		for each(var c:basicItemCAEM in o.causas){
+			s=s+c.name+"\n";
+		}
+		return s;
+	}
+		
+	
+	private function addEvento():void{
+		var ae:formaEvento=formaEvento(PopUpManager.createPopUp(this,formaEvento,true));
+		ae.usuario=this.usuario;
+		ae.addEventListener('Saved',loadEventos);
+		ae.addEventListener('Ubicar',ubicaForma);
+		PopUpManager.centerPopUp(ae);
+		
+	}
+	
+	private function ubicaForma(event:eventCoorde):void{
+		var e:eventCoorde=new eventCoorde('Ubicar',event.xCoorde.toString(),event.yCoorde.toString(),event.label);
+		this.dispatchEvent(e);
+	}
+	
+	private function editEvento():void{		
+		var evento:eventoCAEM=dgEventos.selectedItem as eventoCAEM;
+		
+		if(evento.uri_user==usuario.uri_user){
+			var ae:formaEvento=formaEvento(PopUpManager.createPopUp(this,formaEvento,true));
+			ae.evento=evento;
+			
+			PopUpManager.centerPopUp(ae);			 
+			ae.addEventListener('Saved',loadEventos); 				
+		}else{
+			Alert.show("No puede editar este evento");
+		}	
+	}
+	
+	private function download():void{
+		if(dgEventos.selectedIndex>-1){
+			var ur:URLRequest=new URLRequest((this.parentApplication as admin_atlas).preURL+'reports/ficha_evento.php');
+			var vars:URLVariables=new URLVariables();
+			
+			vars.ID=(dgEventos.selectedItem as eventoCAEM).id;
+			
+			ur.data=vars;			
+			ur.method='POST';
+			
+			var dv:downloadView=downloadView(PopUpManager.createPopUp(this,downloadView,true));
+			dv.ur=ur;
+			
+			dv.fName=(dgEventos.selectedItem as eventoCAEM).txt_sitio+"-"+(dgEventos.selectedItem as eventoCAEM).fecha+".pdf";
+			PopUpManager.centerPopUp(dv);
+			dv.Download();
+		}
+	}
+	
+	
+	private function showFiles():void{
+		if(dgEventos.selectedIndex>-1){
+			var lf:listFiles=listFiles(PopUpManager.createPopUp(this,listFiles,true));
+			lf.evento=(dgEventos.selectedItem as eventoCAEM)
+			PopUpManager.centerPopUp(lf);	
+		}
+	}	
+	private function ubicar():void{
+		if(dgEventos.selectedItem!=null){
+	 		var par:xugarWindowLite=this.parent as xugarWindowLite;
+			par.minMe(null);
+			var sit:eventoCAEM=dgEventos.selectedItem as eventoCAEM;
+			var e:eventCoorde=new eventCoorde('Ubicar',sit.lat,sit.lon, sit.txt_sitio+"\n"+ sit.txt_municipio);			
+	 		this.dispatchEvent(e);
+		}
+		showPoly();		
+	}
+	
+	
+	
+	private function showPoly():void{		
+		mapa.loadPoly(dgEventos.selectedItem.id);			
+	}
+	
+		]]>
+	</mx:Script>
+	<mx:VBox y="0" paddingLeft="10" paddingRight="10" width="100%" height="100%" paddingTop="10" paddingBottom="10">	
+		<mx:HBox width="100%" id="hbox1">
+			<mx:Label x="10" y="10" text="Cuenca:" fontWeight="bold" id="label3"/>
+			<mx:ComboBox x="68" y="8" id="cmbCuenca" width="230" labelField="name" change="filtraEventos()"/>
+			<mx:Label x="305" y="10" text="Municipio:" fontWeight="bold" id="label1"/>
+			<mx:ComboBox x="374" y="8" id="cmbMunicipio" dataProvider="{(cmbCuenca.selectedItem as cuencaCAEM).municipios}" width="230" labelField="name" change="filtraEventos()"/>
+		</mx:HBox>
+		<mx:HBox width="100%">
+			<mx:Label x="10" y="38" text="Sitio:" fontWeight="bold" id="label2"/>
+			<mx:Spacer width="8" id="spacer1"/>
+			<mx:ComboBox x="68" y="36" id="cmbSitio" dataProvider="{(cmbMunicipio.selectedItem as municipioCAEM).sitios}" width="230" labelField="name" change="filtraEventos()"/>
+			<mx:Spacer width="83"/>
+		</mx:HBox>
+		<mx:DataGrid id="dgEventos" width="100%" height="100%" variableRowHeight="true"
+			 doubleClickEnabled="true" doubleClick="editEvento();">
+			<mx:columns>			
+				<mx:DataGridColumn headerText="" dataField="file_count" width="15" itemRenderer="renderer.clipRenderer"/>
+				<mx:DataGridColumn headerText="Prioridad" dataField="prioridad" width="70" itemRenderer="renderer.starRenderer"/>
+				<mx:DataGridColumn headerText="Sitio" dataField="txt_sitio" width="200" wordWrap="true"/>	
+				<mx:DataGridColumn headerText="Fecha de evento" dataField="fecha"/>
+				<mx:DataGridColumn headerText="Actualización" dataField="last_update" width="90"/>
+				<mx:DataGridColumn headerText="Usuario" dataField="txt_user" width="70"/>
+				<mx:DataGridColumn headerText="" width="25"  editorDataField="user_type" rendererIsEditor="true"  itemRenderer="obj.items.userDataGridRender"/>			
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:HBox width="100%" horizontalAlign="right">
+			<mx:Button label="Agregar evento" click="addEvento();" width="140" id="btnAEvento"/>			
+			<mx:Button label="Ubicar" click="ubicar();" width="140" id="btnUbicar"/>
+			<mx:Button label="Reporte" width="140" click="download();"/>
+			<mx:Button label="Archivos adjuntos" width="140" click="showFiles();"/>
+		</mx:HBox>
+		
+	</mx:VBox>	
+</mx:Canvas>

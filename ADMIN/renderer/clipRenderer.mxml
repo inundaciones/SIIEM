@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalAlign="middle"  horizontalAlign="center"
+	 width="20" horizontalGap="0">
+	<mx:Script>
+		<![CDATA[
+		
+		import mx.controls.Image;		
+        [Embed(source="assets/clip.png")]
+        private var clip:Class; 
+	
+		 override public function set data(value:Object):void {
+                        
+            super.data = value;
+			this.removeAllChildren();
+			
+			if(data.files.length>0){
+            	var img:Image=new Image();
+				img.width=20;
+				img.height=20;
+				img.source=clip;				
+				this.addChild(img);
+            }
+									
+		}
+		
+		]]>
+	</mx:Script>	
+</mx:HBox>
+

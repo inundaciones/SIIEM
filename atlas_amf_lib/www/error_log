@@ -1,0 +1,11 @@
+[29-Jul-2009 09:30:24] PHP Warning:  include(includes/pdf/class.ezpdf.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/equidna/public_html/tester/atlas/helper.php on line 4
+[29-Jul-2009 09:30:24] PHP Warning:  include(includes/pdf/class.ezpdf.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/equidna/public_html/tester/atlas/helper.php on line 4
+[29-Jul-2009 09:30:24] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening 'includes/pdf/class.ezpdf.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php:/home/equidna/usr/local') in /home/equidna/public_html/tester/atlas/helper.php on line 4
+[29-Jul-2009 09:30:24] PHP Fatal error:  Class 'Cezpdf' not found in /home/equidna/public_html/tester/atlas/helper.php on line 5
+[29-Jul-2009 09:53:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/helper.php on line 13
+[03-Aug-2009 13:56:28] PHP Fatal error:  Call to undefined function  totexcausa() in /home/equidna/public_html/tester/atlas/helper.php on line 29
+[03-Aug-2009 13:57:03] PHP Fatal error:  Call to undefined function  totexcausa() in /home/equidna/public_html/tester/atlas/helper.php on line 29
+[03-Aug-2009 13:57:08] PHP Fatal error:  Call to undefined function  totexcausa() in /home/equidna/public_html/tester/atlas/helper.php on line 29
+[03-Aug-2009 13:57:43] PHP Fatal error:  Call to undefined function  totexcausa() in /home/equidna/public_html/tester/atlas/helper.php on line 29
+[05-Aug-2009 18:12:56] PHP Parse error:  syntax error, unexpected ',' in /home/equidna/public_html/tester/atlas/helper.php on line 50
+[11-Sep-2009 12:05:35] PHP Fatal error:  Call to undefined function  mysql_quert() in /home/equidna/public_html/tester/atlas/helper.php on line 6

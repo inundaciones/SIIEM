@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="250" height="84" backgroundColor="#FFFFFF" cornerRadius="4" borderStyle="solid">
+	
+		
+	<mx:Button label="+" x="213" width="25" height="18" bottom="10"/>
+	<mx:TextArea x="10" y="10" width="215" height="32" borderStyle="none" backgroundAlpha="0.0" wordWrap="true" text="{sitio.name}" editable="false"/>
+	<mx:Image x="225" y="2" source="assets/window/closeBtn.png"/>
+		
+	
+	<mx:Script>
+		<![CDATA[
+			import obj.CAEM.sitioCAEM;
+			[Bindable]
+			public var sitio:sitioCAEM= new sitioCAEM();
+			
+		]]>
+	</mx:Script>
+	<mx:Label x="77" text="Añadir evento al sitio:" bottom="10"/>
+</mx:Canvas>

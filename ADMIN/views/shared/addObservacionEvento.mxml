@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="258" height="273" backgroundColor="#FFFFFF" borderStyle="solid" cornerRadius="0" borderThickness="2"
+	 borderColor="#3A9100" themeColor="#47B200">
+<mx:Script>
+	<![CDATA[
+		import obj.CAEM.eventoCAEM;
+		import mx.controls.DataGrid;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.remoting.RemoteObject;
+		import mx.managers.CursorManager;
+		import mx.managers.PopUpManager;
+		import mx.controls.Alert;
+		import mx.managers.CursorManagerPriority;		
+		
+		[Embed(source="assets/cursor.swf")]
+		private var cursorCAEM:Class;
+		
+		public var evento:eventoCAEM;
+		public var dg:DataGrid;
+		
+		
+		private function faultListener(event:FaultEvent):void {
+			Alert.show(event.fault.message, "Error");
+		}
+		
+		private function add():void{			
+						
+			var ro:RemoteObject=new RemoteObject('zend');
+			ro.source='eventoController';
+			ro.addEventListener(ResultEvent.RESULT,addResultListener);
+			ro.addEventListener(FaultEvent.FAULT,faultListener);
+			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+			ro.addObservacion(evento,txtObservacion.text);
+		}
+		
+		private function addResultListener(event:ResultEvent):void{
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			evento.observaciones.push(txtObservacion.text);
+			dg.dataProvider=evento.observaciones			
+			PopUpManager.removePopUp(this);
+		}
+	]]>
+</mx:Script>
+	<mx:TextArea x="10" y="24" width="234" height="201" id="txtObservacion" styleName="inputText" backgroundColor="#EEEEEE"/>
+	<mx:Button label="Agregar" right="10" bottom="10" click="add();"/>
+	<mx:Button label="Cancelar" bottom="10" left="88" click="{PopUpManager.removePopUp(this);}"/>
+	<mx:Label x="10" y="2" text="Ingrese un comentario."/>
+	
+</mx:Canvas>

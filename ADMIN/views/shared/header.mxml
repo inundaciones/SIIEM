@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="60"  xmlns:degrafa="http://www.degrafa.com/2007"
+	 verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundColor="#FFFFFF">
+	<mx:Script>
+		<![CDATA[
+			
+			
+			public var userType:String= new String();
+			public var userName:String= new String();
+			[Bindable]
+			private var userColor:uint= 0x123456;
+			
+			private var peticion:Timer= new Timer(500,1);
+			
+			
+			[Embed(source="assets/logoCompromiso.svg")]
+            [Bindable]
+            public var compromiso:Class; 
+            [Embed(source="assets/logoAtlas.png")]
+            [Bindable]
+            public var logoAtlas:Class;     
+			
+			private function colorTexto():uint
+			{
+				
+			peticion.addEventListener(TimerEvent.TIMER,volverPedir);
+				var cl:uint=0;
+				switch(userType){
+					case 'A':
+						cl=0xdedede;
+						nombre.text="Usuario: "+userName;
+						userColor=0xED0000;
+					break;
+					case 'M':
+						cl=0xdedede;
+						nombre.text="Usuario: "+userName;
+						userColor=0x00A200;
+					break;
+					case 'G':
+						cl=0xdedede;
+						nombre.text="Usuario: "+userName;
+						userColor=0x005600;
+					break;
+					case 'T':
+						cl=0x000000;
+						nombre.text="Usuario: "+userName;
+						userColor=0xE4EAF2;
+					break;
+					case 'O':
+						cl=0xdedede;
+						nombre.text="Usuario: "+userName;
+						userColor=0x8C0000;
+					break;
+					default:
+						cl=0xdedede;
+						nombre.text="Atlas de Inundaciones";
+						userColor=0x005600;
+						
+						peticion.start()
+				}
+				
+				return cl;
+			}
+			
+			private function volverPedir(even:TimerEvent):void
+			{
+				colorTexto()	
+			}
+			
+			
+		]]>
+	</mx:Script>
+	<mx:HBox horizontalGap="0" x="0" y="0">
+		<mx:Canvas x="0"  y="0" height="60" width="150" backgroundColor="{userColor}"/>
+		<degrafa:Surface>
+			<degrafa:fills>
+				<degrafa:LinearGradientFill id="relleno" angle="0">
+					<degrafa:GradientStop color="{userColor}" ratio="0"/>
+					<degrafa:GradientStop color="#FFFFFF" ratio="0.5"/>
+				</degrafa:LinearGradientFill>
+			</degrafa:fills>
+			<degrafa:GeometryGroup>
+				<degrafa:RegularRectangle width="{this.width/2}" height="60" fill="{relleno}"/>
+			</degrafa:GeometryGroup>
+		</degrafa:Surface>
+	</mx:HBox>
+	<mx:Image source="{compromiso}" right="10" bottom="6"/>
+	<mx:Image source="{logoAtlas}" bottom="4" right="312"/>
+		
+	<mx:Label  bottom="6" left="6" color="{colorTexto()}"  id="nombre" fontSize="18"/>
+</mx:Canvas>

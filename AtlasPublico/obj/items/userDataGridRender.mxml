@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" horizontalAlign="center">
+ <mx:Script>
+        <![CDATA[
+
+            [Embed(source="assets/userRojo.gif")]
+            [Bindable]
+            public var rojo:Class; 
+             [Embed(source="assets/userVerde.gif")]
+            [Bindable]
+            public var verde:Class;
+             [Embed(source="assets/userGris.gif")]
+            [Bindable]
+            public var gris:Class;
+             [Embed(source="assets/userVerdeClaro.gif")]
+            [Bindable]
+            public var claro:Class;  
+             [Embed(source="assets/userNegro.gif")]
+            [Bindable]
+            public var negro:Class;  
+           [Bindable]
+           private  var texto:String;
+           
+			override public function set data(value:Object):void 
+            {
+                super.data = value;
+                if (value != null) 
+                {
+                	 var tempS:String;
+                	if(value.hasOwnProperty("user_type")){
+                		//trace("user_type: "+value.user_type);
+                		tempS=value.user_type;
+                	}else if(value.hasOwnProperty("tipo")){
+                		//trace("tipo: "+value.tipo);
+                		tempS=value.tipo;
+                	}
+						icono.visible=false;
+                    var s:String = "";
+                    
+						icono.source=negro;
+                    if(tempS=='A'){
+						s='ADMINISTRADOR';
+						icono.visible=true;
+						icono.source=rojo;
+					}
+					if(tempS=='M'){
+						s='MUNICIPIO';
+						icono.source=claro;
+						icono.visible=true;
+					}
+					if(tempS=='G'){
+						s='GERENCIA';
+						icono.source=verde;
+						icono.visible=true;
+					}
+					if(tempS=='T'){
+						s='TOTAL';
+						icono.source=gris;
+						icono.visible=true;
+					}
+					if(tempS=='null'){
+						s='';
+						icono.source=negro;
+						icono.visible=false;
+					}
+					 if(tempS=='O'){
+						s='OBSERVADOR';
+						icono.source=negro;
+						icono.visible=true;
+					}
+					value=s;
+					texto=s;
+		        }
+            }
+            
+           
+
+                    
+        ]]>
+    </mx:Script>
+
+    <!--mx:Label text="{texto}"/-->
+    <mx:Image height="20"  id="icono"/>
+
+</mx:HBox>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 addedToStage="loadSitios();" width="100%" height="100%">
+	 <mx:Metadata>
+		[Event(name="Ubicar", type="obj.eventCoorde")]
+	</mx:Metadata>
+	<mx:Script>
+		<![CDATA[
+			import obj.xugarWindowLite;
+	
+	import mx.managers.PopUpManager;	
+	import obj.eventCoorde;
+	import mx.controls.Alert;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	import mx.collections.ArrayCollection;
+   	import obj.CAEM.*;
+    import mx.managers.CursorManagerPriority;
+   	import mx.managers.CursorManager;
+   	import mx.rpc.remoting.RemoteObject;
+   	
+    public var usuario:usuarioCAEM;
+    
+     [Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+			     	                    
+	private function loadSitios(event:Event=null):void{		    	
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadSitiosDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.loadSitiosTmp();
+    }
+	
+	private function loadSitiosDataListener(event:ResultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);                         
+		dgSitios.dataProvider=event.result as Array;			
+	}
+   
+	private function faultListener(event:FaultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		Alert.show(event.fault.message, "Error");
+	}	
+	
+	private function removeSitio():void{
+		var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadSitiosDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.deleteSitioTmp(dgSitios.selectedItem as sitioCAEM);
+	}
+	
+	private function aproveSitio():void{
+		var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadSitiosDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.validateSitioTmp(dgSitios.selectedItem as sitioCAEM);
+	}
+	
+	private function ubicar():void{		
+		if(dgSitios.selectedItem!=null){
+			var sit:sitioCAEM=dgSitios.selectedItem as sitioCAEM;
+			var e:eventCoorde=new eventCoorde('Ubicar',sit.lat,sit.lon,sit.clave+"-"+sit.name+"\n"+ sit.txt_municipio);
+			var par:xugarWindowLite=this.parent as xugarWindowLite;			
+			par.minMe(null);
+	 		this.dispatchEvent(e);
+		}
+	}
+		]]>
+	</mx:Script>
+	<mx:VBox y="0" paddingLeft="10" paddingRight="10" width="100%" height="100%" paddingTop="10" paddingBottom="10">	
+		<mx:DataGrid  id="dgSitios" width="100%" height="100%"
+			   >
+			<mx:columns>									
+				<mx:DataGridColumn headerText="Nombre" dataField="name"/>
+				<mx:DataGridColumn headerText="Gerencia" dataField="txt_gerencia" width="100"/>
+				<mx:DataGridColumn headerText="Latitud" dataField="lat" width="100"/>
+				<mx:DataGridColumn headerText="Longitud" dataField="lon" width="100"/>			
+			</mx:columns>
+		</mx:DataGrid>	
+		<mx:HBox width="100%" horizontalAlign="right">
+			<mx:Button label="Ubicar en mapa" click="{ubicar()}"/>
+			<mx:Button label="Declinar solicitud" click="{removeSitio()}" x="469" y="245"/>
+			<mx:Button label="Aprobar solicitud" click="{aproveSitio()}" x="337" y="245"/>			
+		</mx:HBox>	
+	</mx:VBox>
+</mx:Canvas>

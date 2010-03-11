@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+	creationComplete="init()"  xmlns:text="flash.text.*" xmlns:flex="com.modestmaps.flex.*">
+<mx:Metadata>	
+	[Event(name="zoomChange")]
+</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.IList;
+			import obj.geo.geoPoint;
+			
+			import obj.geo.geoPoly;
+			import mx.core.UIComponent;
+			import obj.CAEM.sitioCAEM;
+			import obj.CAEM.municipioCAEM;
+			import obj.CAEM.localidadCAEM;
+			import obj.UTMLatLon;			
+			
+			import com.modestmaps.*;
+			import com.modestmaps.core.*;
+			import com.modestmaps.events.*;
+			import com.modestmaps.extras.*;
+			import com.modestmaps.flex.*;
+			import com.modestmaps.geo.*;
+			
+						
+			import mx.rpc.remoting.RemoteObject;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import mx.managers.CursorManager;
+			import mx.managers.CursorManagerPriority;
+			import mx.controls.Alert;
+			
+			import org.vanrijkom.dbf.DbfRecord;
+			import org.vanrijkom.dbf.DbfTools;
+			import org.vanrijkom.dbf.DbfHeader; 
+			import org.vanrijkom.shp.ShpPoint;
+			import org.vanrijkom.shp.ShpPolygon;
+			import org.vanrijkom.shp.ShpObject;
+			import org.vanrijkom.shp.ShpRecord;
+			import org.vanrijkom.shp.ShpType;
+			import org.vanrijkom.shp.ShpError;
+			import org.vanrijkom.shp.ShpHeader;						
+			import org.vanrijkom.shp.ShpTools; 
+			import org.vanrijkom.shp.ShpPolyline; 
+			 
+			import obj.MarcadorSitio;			
+			 
+			public var mapaX:Number;
+			public var mapaY:Number;
+			
+			private var marcas:Array= new Array();
+			
+			[Embed(source="assets/cursor.swf")]
+				private var cursorCAEM:Class;   
+									
+			[Bindable]
+			private var colorLegal:uint=0;
+			
+			[Bindable]
+
+			private var textoLegal2:String="Dirección General de Programa Hidráulico Parque de Orizaba No. 7 Piso 8 Col. El Parque, C.P. 53398, Naucalpan de Juárez, Estado de México Tel. 5358-6868 <u><a href='mailto:dgphinformatica@prodigy.net.mx' >dgphinformatica@prodigy.net.mx<a></u>";
+
+			
+			private var gotita:MovieClip= new gota();
+			private var gotaCont:UIComponent= new UIComponent();
+			
+			private var numPoly:Number;
+			private var curPoly:Number;
+			
+				
+			private function init():void{
+				gotaCont.addChild(gotita);
+				//this.getNumPoly();
+				
+				modestMap.addEventListener(com.modestmaps.events.MapEvent.EXTENT_CHANGED, getNumPoly);
+											
+			}	
+			
+			public function centrarMapaSinGota(x:Number, y:Number, z:Number):void{
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=x;
+				ull.UTMy=y;
+				ull.UTMToLatLon();
+				modestMap.center = new Location(ull.Lat,ull.Lon);
+				modestMap.zoom=z;
+				
+				var e:Event=new Event('zoomChange');
+				this.dispatchEvent(e);
+			}
+				
+			public function centrarMapa(x:Number,y:Number):void{
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=x;
+				ull.UTMy=y;
+				ull.UTMToLatLon();
+				modestMap.center = new Location(ull.Lat,ull.Lon);
+				modestMap.addMarker(new Location(ull.Lat,ull.Lon),gotita);
+				modestMap.zoom=11;
+				modestMap.visible=true;				
+				var e:Event=new Event('zoomChange');
+				this.dispatchEvent(e);
+			}
+			
+			
+			public function marcar(sit:sitioCAEM, mun:municipioCAEM=null):void{
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=parseFloat(sit.lat);
+				ull.UTMy=parseFloat(sit.lon);
+				ull.UTMToLatLon();
+				modestMap.addMarker(new Location(ull.Lat,ull.Lon),new MarcadorSitio(mun.name,sit.clave+'-'+sit.name));
+			}
+			
+			public function gotear(x:Number,y:Number):void{
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=x;
+				ull.UTMy=y;
+				ull.UTMToLatLon();
+				modestMap.center = new Location(ull.Lat,ull.Lon);
+				modestMap.addMarker(new Location(ull.Lat,ull.Lon),gotaCont);
+			}
+			
+			public function zoom(z:Number):void{
+				modestMap.zoom=z;
+				var e:Event=new Event('zoomChange');
+				this.dispatchEvent(e);				
+			}
+			
+			private function circulo():Sprite{				
+				var c:Sprite= new Sprite();
+				c.graphics.beginFill(0xdd0000,0.4);
+				c.graphics.drawCircle(-2.5,-2.5,5);
+				c.graphics.endFill();
+			 	return c;			 					
+			}
+			
+			private function getNumPoly(event:MapEvent):void{
+				
+				var ro:RemoteObject=new RemoteObject('zend');
+				ro.requestTimeout=0;
+		    	ro.source='geoController';
+		    	ro.addEventListener(ResultEvent.RESULT,polyCountListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	
+		    	var ext:MapExtent=modestMap.map.getExtent();
+		    	var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+		    	
+		    	var xmin:Number;
+		    	var ymin:Number;
+		    	var xmax:Number;
+		    	var ymax:Number;
+		    	
+		    	ull.Lat=ext.east;
+		    	ull.Lon=ext.south;
+		    	
+		    	ull.LatLonToUTM();
+		    	
+		    	xmin=ull.UTMx;
+		    	ymin=ull.UTMy;
+		    	
+		    	ull.Lat=ext.west;
+		    	ull.Lon=ext.north;
+		    	
+		    	ull.LatLonToUTM();
+		    	
+		    	xmax=ull.UTMx;
+		    	ymax=ull.UTMy;
+		    	
+		    	ro.polyCountXY('ECA',xmin,xmax,ymin,ymax);
+			}
+			
+			private function polyCountListener(event:ResultEvent):void{
+				var overlays:IList=modestMap.map.overlayManager.overlays;
+				for each(var o:Overlay in overlays){
+					modestMap.map.overlayManager.removeOverlay(o);
+				}
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				numPoly=parseInt(event.result as String);
+				this.numPoly=Math.ceil(numPoly/500);
+				curPoly=0;
+				if(modestMap.zoom>12){
+					loadSHP();
+				}	
+			}
+			
+			private function loadSHP():void{
+				var ro:RemoteObject=new RemoteObject('zend');
+				ro.requestTimeout=0;
+		    	ro.source='geoController';
+		    	ro.addEventListener(ResultEvent.RESULT,loadSHPListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	
+		    	
+		    	var ext:MapExtent=modestMap.map.getExtent();
+		    	var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+		    	
+		    	var xmin:Number;
+		    	var ymin:Number;
+		    	var xmax:Number;
+		    	var ymax:Number;
+		    	
+		    	ull.Lat=ext.east;
+		    	ull.Lon=ext.south;
+		    	
+		    	ull.LatLonToUTM();
+		    	
+		    	xmin=ull.UTMx;
+		    	ymin=ull.UTMy;
+		    	
+		    	ull.Lat=ext.west;
+		    	ull.Lon=ext.north;
+		    	
+		    	ull.LatLonToUTM();
+		    	
+		    	xmax=ull.UTMx;
+		    	ymax=ull.UTMy;
+		    	
+		    	ro.loadMunicipioXY('ECA',curPoly*500,xmin,xmax,ymin,ymax);
+			}
+			
+			private function faultListener(event:FaultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				Alert.show(event.fault.message, "Error");
+			}
+			
+			private function loadSHPListener(event:ResultEvent):void{
+				var poligonos:Array=event.result as Array;
+				for each(var p:geoPoly in poligonos){
+					addOverlay(p);
+				}
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				curPoly++;
+				if(curPoly<numPoly){
+					loadSHP();
+				}
+			}
+			
+			private function addOverlay(poly:geoPoly):void {
+
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				
+				ull.UTMx=parseFloat(poly.xmin);
+				ull.UTMy=parseFloat(poly.ymin);
+				ull.UTMToLatLon();
+				
+				var xmin:Number=ull.Lat;
+				var ymin:Number=ull.Lon;
+				
+				ull.UTMx=parseFloat(poly.xmax);
+				ull.UTMy=parseFloat(poly.ymax);
+				ull.UTMToLatLon();
+				
+				var xmax:Number=ull.Lat;
+				var ymax:Number=ull.Lon;
+				
+				
+				// create the new PolylineOverlay instance
+				var overlay:PolylineOverlay = new PolylineOverlay(modestMap.map);
+
+				// set properties of the overlay
+				overlay.name = "GABO";
+				overlay.fillColor = 0xff0000;
+				
+				overlay.centroid = new Location(xmin+xmax/2,ymin+ymax/2);
+                //overlay.lineStyle = new LineStyle(0.4, 0xff0000, 1.0, false, LineScaleMode.NONE);
+				//overlay.clickable = true;
+
+				// add data points to the new overlay
+				var points:Array=new Array();
+				for each(var p:geoPoint in poly.points){
+					ull.UTMx=parseFloat(p.x);
+					ull.UTMy=parseFloat(p.y);
+					ull.UTMToLatLon();
+					var l:Location=new Location(ull.Lat,ull.Lon);
+					points.push(l);
+				}
+				
+                overlay.addPolyline(points);
+
+				// add a label showing the overlay name and value -- in this example,
+				// overlay name is a zipcode, and value is average home price in that zipcode
+				
+				//var subTitle:String = formatter.format(currentOverlay.@value);
+				//overlay.addMarker(currentOverlay.@name, subTitle);
+
+				// add the overlay to the map
+				
+				modestMap.map.overlayManager.addOverlay(overlay);
+				
+				
+				// add a listener to respond when the overlay is clicked
+				
+				//overlay.addEventListener(OverlayEvent.OVERLAY_CLICKED, onOverlayClicked);				
+						
+				// called when the overlay is clicked -- 
+				// this demo function simply displays the overlay name in an Alert box
+				
+ 			}
+			
+		]]>
+	</mx:Script>
+	<flex:Map id="modestMap" provider="YAHOO_AERIAL" zoom="9"  width="100%" height="100%" y="0" x="0"/>
+	<mx:Canvas   width="100%" height="25" horizontalCenter="0" bottom="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" backgroundColor="#FFFFFF">
+			<mx:Text selectable="false" color="{colorLegal}" text="Gobierno del Estado de México | Secretaría del Agua y Obra Pública | Comisión del Agua del Estado de México" width="100%" height="17" fontSize="10" horizontalCenter="0" y="-1" textAlign="center" fontWeight="bold"/>
+			<mx:Text selectable="false" htmlText="{textoLegal2}" color="{colorLegal}" fontSize="8" y="12" horizontalCenter="0" textAlign="center" width="100%" text="Manzana"/>
+	</mx:Canvas>
+</mx:Canvas>
+
+

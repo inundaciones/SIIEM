@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="374" height="430"
+	 title="Nuevo sitio" creationComplete="Init();" showCloseButton="true" close="{PopUpManager.removePopUp(this);}"
+	  xmlns:maps="com.google.maps.*">
+	 <mx:Metadata>
+		[Event(name="Saved")]
+	</mx:Metadata>
+	 <mx:Script>
+	 	<![CDATA[
+	 		import obj.UTMLatLon;
+	 		import com.google.maps.LatLng;
+	 		import obj.geo.MarkerCAEM;
+	 		import com.google.maps.overlays.MarkerOptions;
+	 		import com.google.maps.interfaces.IPane;
+	 		import com.google.maps.PaneId;
+	 		import com.google.maps.interfaces.IPaneManager;
+	 		import com.google.maps.MapMouseEvent;
+	 		import com.google.maps.controls.ZoomControl;
+	 		import com.google.maps.controls.ZoomControlOptions;
+	 		import mx.rpc.events.FaultEvent;
+	 		import mx.managers.CursorManagerPriority;
+	 		import mx.rpc.events.ResultEvent;
+	 		import mx.rpc.remoting.RemoteObject;
+	 		import mx.managers.CursorManager;
+	 		import obj.CAEM.*;
+	 		import mx.controls.Alert;
+	 		import mx.managers.PopUpManager;	 				 		
+	 		
+	 		[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+	 		
+	 		[Embed(source="assets/markerIcon.png")]
+   			private var _markerIcon:Class;				 	
+		 	
+		 	private var Lat:Number=0;
+		 	private var Lon:Number=0;
+		 	
+		 	private function Init():void{
+	 			loadGerencias();
+	 		}
+	 		
+	 		private function loadGerencias():void{
+	 			var ro:RemoteObject=new RemoteObject('zend');
+	 			ro.source='catalogosGeograficos';
+	 			ro.addEventListener(ResultEvent.RESULT, loadCuencasResultHandler);
+	 			ro.addEventListener(FaultEvent.FAULT, loadCuencasFaultHandler);
+	 			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	 			ro.loadCuencas();
+	 		}
+	 		
+	 		private function loadCuencasResultHandler(event:ResultEvent):void{
+	 			cmbCuenca.dataProvider=event.result as Array;
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			 			
+ 				cmbCuenca.selectedIndex=-1;
+ 				cmbCuenca.text='Seleccione una Cuenca';
+ 				
+	 			
+	 		}
+	 		
+	 		private function loadCuencasFaultHandler(event:FaultEvent):void{
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			Alert.show(event.fault.toString(),"Error");
+	 		}
+	 		
+	 		private function addSitio():void{
+	 			if(txtName.text!=''){
+		 			if(cmbMunicipio.selectedIndex>-1){
+			 			var sitio:sitioCAEM=new sitioCAEM();
+			 			
+			 			var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+						ull.Lat=this.Lat;
+						ull.Lon=this.Lon;
+						ull.LatLonToUTM();
+			 			sitio.lat=ull.UTMx.toString();
+			 			sitio.lon=ull.UTMy.toString();
+			 			
+			 			sitio.id_municipio=(cmbMunicipio.selectedItem as municipioCAEM).id_municipio;
+			 			sitio.name=txtName.text;
+			 			sitio.lat=this.Lat.toString();
+			 			sitio.lon=this.Lon.toString();
+			 			sitio.D_N='';
+			 			sitio.D_S='';
+			 			sitio.D_O='';
+			 			sitio.D_P='';
+			 			
+			 			var ro:RemoteObject=new RemoteObject('zend');
+			 			ro.source='catalogosGeograficos';
+			 			ro.addEventListener(ResultEvent.RESULT, addResultHandler);
+			 			ro.addEventListener(FaultEvent.FAULT, addFaultHandler);
+			 			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+			 			ro.addSitio(sitio);
+			 		}else{
+			 			Alert.show("Por favor seleccione un municipio","Faltan datos");
+			 		}
+			 	}else{
+			 		Alert.show("Por favor nombre el sitio","Faltan datos");	
+			 	}		
+	 		}
+	 		
+	 		private function addResultHandler(event:ResultEvent):void{
+	 			//Alert.show(event.result.toString(),"Error");
+	 			var e:Event=new Event('Saved');
+	 			this.dispatchEvent(e);
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			PopUpManager.removePopUp(this);
+	 		}
+	 		
+	 		private function addFaultHandler(event:FaultEvent):void{
+	 			CursorManager.removeCursor(CursorManager.currentCursorID);
+	 			Alert.show(event.fault.toString(),"Error");
+	 		}
+	 		
+	 		private function initMap():void{
+	 			
+	 			var zco:ZoomControlOptions=new ZoomControlOptions();
+	 			var zc:ZoomControl=new ZoomControl(zco);
+	 			googleMap.addControl(zc);
+	 			googleMap.addEventListener(MapMouseEvent.CLICK,mapClickHandler);
+	 			
+	 			var centro:LatLng=new LatLng(19.32669491,-99.36859180);
+				googleMap.setCenter(centro);
+				googleMap.setZoom(8);
+	 		}	 		
+	 		
+	 		private function mapClickHandler(event:MapMouseEvent):void{
+		 		var pane:IPane;	
+		 		pane=googleMap.getPaneManager().getPaneById(PaneId.PANE_MARKER);
+		 		pane.clear();
+		 		
+		 		var mo:MarkerOptions=new MarkerOptions();								
+				mo.icon=new _markerIcon();
+				mo.hasShadow=true;
+								
+			   var marker:MarkerCAEM= new MarkerCAEM(event.latLng,mo);
+			   pane.addOverlay(marker);
+			   	
+			   this.Lat=event.latLng.lat();
+			   this.Lon=event.latLng.lng();	
+			 	
+	 		}
+	 		
+	 		
+	 	]]>
+	 </mx:Script>
+	<mx:Label x="10" y="10" text="Nombre:"/>
+	<mx:Label x="10" y="38" text="Cuenca:" />
+	<mx:Label x="10" y="66" text="Municipio:"/>
+	<mx:TextInput x="92" y="8" id="txtName" width="252"/>
+	<mx:ComboBox x="92" y="36" id="cmbCuenca" labelField="name" width="252" change="{cmbMunicipio.dataProvider=(cmbCuenca.selectedItem as cuencaCAEM).municipios;}"/>
+	<mx:ComboBox x="92" y="64" id="cmbMunicipio" labelField="name" width="252"/>
+	<maps:Map key="ABQIAAAAltyW0IXKxgyIZiznmfD1YxRRYEiY5W53UzZqN_1nV7KPQsxs1hSy9x6aMAHEi6sxN46AHryu3MNQFg" countryCode="MX" x="10" y="94" width="334"
+		 id="googleMap" mapevent_mapready="initMap()"/>
+	<mx:Button label="Aceptar" right="10" bottom="10" click="addSitio();"/>
+	<mx:Button label="Cancelar" right="90" bottom="10" click="PopUpManager.removePopUp(this);"/>
+	
+</mx:TitleWindow>

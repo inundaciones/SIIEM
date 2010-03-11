@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="320" height="255" backgroundColor="#FFFFFF" borderStyle="solid" cornerRadius="0" borderThickness="2"
+	 creationComplete="Init();" borderColor="#3A9100">
+<mx:Script>
+	<![CDATA[
+		import obj.CAEM.usuarioCAEM;
+		import obj.CAEM.eventoCAEM;
+		import mx.controls.DataGrid;
+		import mx.managers.CursorManagerPriority;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.remoting.RemoteObject;
+		import mx.managers.CursorManager;
+		import mx.managers.PopUpManager;
+		import mx.controls.Alert;
+		import obj.CAEM.basicItemCAEM;
+		import obj.CAEM.accionEventoCAEM;
+		
+		[Embed(source="assets/cursor.swf")]
+		private var cursorCAEM:Class;
+		public var usuario:usuarioCAEM;
+		public var evento:eventoCAEM;
+		public var dg:DataGrid;
+		public var TIPO2:String='A';
+		private var accion:accionEventoCAEM=new accionEventoCAEM();
+		
+		[Bindable]
+			private var xmlTipos:XML=new XML("<X><TIPO LABEL='EMERGENTE' ID='E'/><TIPO LABEL='PREVENTIVA' ID='P'/><TIPO LABEL='DEFINITIVA' ID='D'/></X>")
+		
+		private function Init():void{
+			if(TIPO2=="A"){
+				L1.text='Acción';
+				loadAcciones();				
+			}else{
+				L1.text='Obra';
+				loadObras();
+			}
+			loadDependencias();
+		}
+		
+		private function loadAcciones():void{
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGenerales';
+	    	ro.addEventListener(ResultEvent.RESULT,loadAccionesDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadBasic('ACCIONES');
+	    }
+	    
+	    private function loadObras():void{
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGenerales';
+	    	ro.addEventListener(ResultEvent.RESULT,loadAccionesDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadBasic('OBRAS');
+	    }
+	    
+	    private function loadDependencias():void{
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGenerales';
+	    	ro.addEventListener(ResultEvent.RESULT,loadDependenciasDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	if(evento.id_municipio=='0'){
+	    		ro.loadDependenciasMunicipio(usuario.id_municipio);	
+	    	}else{
+	    		ro.loadDependenciasMunicipio(evento.id_municipio);
+	    	}	
+	    }
+		
+		private function loadAccionesDataListener(event:ResultEvent):void{
+			cmbAcciones.dataProvider=event.result as Array;
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+		}
+		
+		private function loadDependenciasDataListener(event:ResultEvent):void{
+			cmbDependencias.dataProvider=event.result as Array;
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+		}
+		
+		private function faultListener(event:FaultEvent):void {
+			Alert.show(event.fault.message, "Error");
+		}
+		
+		private function add():void{			
+			accion.id_accion=(cmbAcciones.selectedItem as basicItemCAEM).id;
+			accion.txt_accion=(cmbAcciones.selectedItem as basicItemCAEM).name;
+			accion.id_dependencia=(cmbDependencias.selectedItem as basicItemCAEM).id;
+			accion.txt_dependencia=(cmbDependencias.selectedItem as basicItemCAEM).name;
+			accion.costo=txtCosto.text;
+			accion.tipo=(cmbTipo.selectedItem as XML).@ID;
+			accion.tipo2=TIPO2;
+			
+			var ro:RemoteObject=new RemoteObject('zend');
+			ro.source='eventoController';
+			ro.addEventListener(ResultEvent.RESULT,addResultListener);
+			ro.addEventListener(FaultEvent.FAULT,faultListener);
+			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+			ro.addAccion(evento,accion);
+		}
+		
+		private function addResultListener(event:ResultEvent):void{
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			evento.acciones.push(accion);
+			dg.dataProvider=evento.acciones;			
+			PopUpManager.removePopUp(this);
+		}
+	]]>
+</mx:Script>
+	<mx:Label x="20" y="10" text="Acción" color="#000000" fontSize="11" id="L1"/>
+	<mx:Label x="20" y="166" text="Costo estimado (pesos $)" color="#000000" fontSize="11"/>
+	<mx:Label x="20" y="112" text="Dependencia ejecutora" color="#000000" fontSize="11"/>
+	<mx:ComboBox x="20" y="31" id="cmbAcciones" width="286" height="22" labelField="name"  itemRenderer="mx.controls.Label"/>
+	<mx:Label x="20" y="61" text="Tipo" color="#000000" fontSize="11"/>
+	<mx:ComboBox x="20" y="82" id="cmbTipo" width="218" height="22" labelField="@LABEL" dataProvider="{xmlTipos..TIPO}" itemRenderer="mx.controls.Label"/>
+	<mx:ComboBox x="20" y="136" id="cmbDependencias" width="218" labelField="name" toolTip="true" itemRenderer="mx.controls.Label" />
+	<mx:TextInput x="20" y="189" width="142" id="txtCosto" text="0" restrict="0132456789."/>
+	<mx:Button label="Agregar" right="10" bottom="10" click="add();"/>
+	<mx:Button label="Cancelar" bottom="10" left="150" click="{PopUpManager.removePopUp(this);}"/>
+	
+</mx:Canvas>

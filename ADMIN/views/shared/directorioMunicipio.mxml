@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	 creationComplete="Init();" height="100%">
+	<mx:states>
+		<mx:State name="gerencia">
+			<mx:RemoveChild target="{cmbCuenca}"/>
+			<mx:RemoveChild target="{label1}"/>
+			<mx:SetProperty target="{label2}" name="y" value="12"/>
+			<mx:SetProperty target="{cmbMunicipio}" name="y" value="10"/>
+			<mx:SetProperty target="{dgDirectorio}" name="height" value="193"/>
+			<mx:SetProperty target="{dgDirectorio}" name="y" value="40"/>
+		</mx:State>
+		<mx:State name="usuario" basedOn="gerencia">
+			<mx:RemoveChild target="{label2}"/>
+			<mx:RemoveChild target="{cmbMunicipio}"/>
+			
+			<mx:SetProperty target="{dgDirectorio}" name="y" value="0"/>
+			
+		</mx:State>
+	</mx:states>
+<mx:Script>
+	<![CDATA[
+		import obj.CAEM.cuencaCAEM;
+		import obj.CAEM.usuarioCAEM;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.remoting.mxml.RemoteObject;
+		import mx.managers.CursorManagerPriority;
+		import obj.CAEM.directorioItemCAEM;
+		import obj.CAEM.municipioCAEM;
+		import mx.managers.CursorManager;
+		import mx.controls.Alert;
+		import mx.managers.PopUpManager;
+		
+		[Embed(source="assets/cursor.swf")]
+		private var cursorCAEM:Class;
+		
+		[Bindable]
+		public var municipio:municipioCAEM=new municipioCAEM();
+		public var usuario:usuarioCAEM;
+		
+		public function Init():void{
+			if(usuario.tipo=='M'){
+				this.currentState='usuario';
+				municipio.id_municipio=usuario.id_municipio;
+				municipio.loadDirectorio();
+			}
+			if(usuario.tipo=='G'){
+				this.currentState='gerencia';
+				loadMunicipios();
+			}
+			if(usuario.tipo=='T'||usuario.tipo=='O'){
+				this.currentState='';
+				loadCuencas();
+			}if(usuario.tipo=='A'){
+				this.currentState='usuario';
+				municipio.loadDirectorio();
+			}
+			if(usuario.tipo=='O'){
+				button2.visible=false;
+				button1.visible=false;
+			}
+		}
+		
+		private function loadCuencas():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadCuencas();
+	    }
+	    		   
+	    
+	    private function loadCuencasDataListener(event:ResultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			cmbCuenca.dataProvider=event.result as Array;
+			cmbCuenca.selectedIndex=-1;
+			cmbCuenca.text='Seleccione una cuenca';								
+		}
+		
+		private function loadMunicipios():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadMunicipiosDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadMunicipiosGerencia(usuario.id_gerencia);
+	    }
+	    		   
+	    
+	    private function loadMunicipiosDataListener(event:ResultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			cmbMunicipio.dataProvider=event.result as Array;
+			cmbMunicipio.selectedIndex=-1;
+			cmbMunicipio.text='Seleccione un municipio'
+											
+		}
+		
+		private function faultListener(event:FaultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			Alert.show(event.fault.message, "Error");
+		}
+		
+		private function delItem():void{
+			var item:directorioItemCAEM=dgDirectorio.selectedItem as directorioItemCAEM;
+			var ro:RemoteObject=new RemoteObject("zend");
+			ro.source='catalogosGenerales';
+			ro.addEventListener(ResultEvent.RESULT,delItemResultHandler);
+			ro.addEventListener(FaultEvent.FAULT,faultHandler);
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			ro.deleteDirectorioItem(item);		
+		}
+		
+		private function faultHandler(event:FaultEvent):void{
+			Alert.show(event.fault.message,"Error");	
+		}
+		
+		private function delItemResultHandler(event:ResultEvent):void{
+			municipio.directorio=event.result as Array;
+		}
+		
+		private function addItem():void{
+			var fad:formaAddDirectorio=formaAddDirectorio(PopUpManager.createPopUp(this,formaAddDirectorio,true));
+			fad.municipio=this.municipio;
+			PopUpManager.centerPopUp(fad);
+		}
+		
+		private function municipioChangeHandler():void{
+			if(cmbMunicipio.selectedIndex>=0){
+				municipio.id_municipio=(cmbMunicipio.selectedItem as municipioCAEM).id_municipio;
+				municipio.loadDirectorio();
+			}
+		}
+		
+		private function cuencaChangeHandler():void{
+			if(cmbCuenca.selectedIndex>=0){
+				cmbMunicipio.dataProvider=(cmbCuenca.selectedItem as cuencaCAEM).municipios;
+				cmbMunicipio.selectedIndex=-1;
+				cmbMunicipio.text='Seleccione un municipio';
+				municipio.id_municipio='0';
+			}
+		}
+		 
+	]]>
+</mx:Script>
+	<mx:VBox y="0" paddingLeft="10" paddingRight="10" width="100%" height="100%" paddingTop="10" paddingBottom="10">
+		<mx:HBox>
+			<mx:Label text="Cuenca" fontWeight="bold" id="label1"/>
+			<mx:ComboBox id="cmbCuenca" width="230" labelField="name" change="cuencaChangeHandler()"/>
+			<mx:Label text="Municipio" fontWeight="bold" id="label2"/>
+			<mx:ComboBox id="cmbMunicipio" width="230" change="municipioChangeHandler()" labelField="name"/>			
+		</mx:HBox>
+		<mx:DataGrid x="0" y="67" width="100%" height="100%" dataProvider="{municipio.directorio}" variableRowHeight="true"
+		 id="dgDirectorio">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Nombre" dataField="name" width="150" wordWrap="true"/>
+				<mx:DataGridColumn headerText="Domicilio" dataField="dom" wordWrap="true"/>
+				<mx:DataGridColumn headerText="Telefono" dataField="tel" width="100" wordWrap="true"/>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:HBox width="100%" horizontalAlign="right">
+			<mx:Button label="+ Agregar" click="addItem()" enabled="{municipio.id_municipio!='0'}" id="button2"/>
+			<mx:Button label="- Eliminar" enabled="{(dgDirectorio.selectedItem as directorioItemCAEM)!=null}" click="delItem()" id="button1"/>			
+		</mx:HBox>
+	</mx:VBox>
+</mx:Canvas>

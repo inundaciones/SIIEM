@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:admin="views.admin.*" 
+	xmlns:ns1="views.shared.*"  xmlns:obj="obj.*">
+<mx:Style source="estilos.css"/>
+<mx:Script>
+	<![CDATA[
+		import views.shared.formaEvento;
+		import obj.UTMLatLon;
+		import com.google.maps.LatLng;
+		import com.google.maps.LatLngBounds;
+		import obj.eventCoorde;
+		import obj.CAEM.*;		
+		
+		[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+		
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		import mx.controls.Alert;
+		import mx.managers.CursorManager;
+		import mx.rpc.remoting.RemoteObject;
+		import mx.managers.CursorManagerPriority;
+		
+		[Bindable]
+			public var usuario:usuarioCAEM;
+		[Bindable]
+			public var cuencas:Array;	
+			//public var sitiosArray:Array=new Array();
+            	
+		private var marcados:Boolean=false;
+		
+		private function loadCuencas():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadCuencas();
+	    }
+		
+		private function loadCuencasDataListener(event:ResultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			cuencas=event.result as Array;			
+			pintaSitios();
+					 			 		
+		}
+		
+		private function faultListener(event:FaultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			Alert.show(event.fault.message, "Error");
+		}
+		
+		private function pintaSitios():void{						
+			var zoom:Number=9;			
+			var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+			var llb:LatLngBounds=new LatLngBounds();
+			for each(var cuenca:cuencaCAEM in cuencas){
+				for each(var mun:municipioCAEM in cuenca.municipios){
+					for each (var sit:sitioCAEM in mun.sitios){												
+						ull.UTMx=parseFloat(sit.lat);
+						ull.UTMy=parseFloat(sit.lon);
+						ull.UTMToLatLon();
+						var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+						llb.extend(ll);													
+						elMapa.marcar(sit,mun);												    			    																			
+					}
+				}
+			}					
+			var centro:LatLng=llb.getCenter();
+			zoom=elMapa.googleMap.getBoundsZoomLevel(llb);
+			elMapa.centrarMapaSinGota(centro.lat(),centro.lng(),zoom);								
+		}
+						
+		private function ubicar(event:eventCoorde):void{
+			elMapa.centrarMapa(event.xCoorde,event.yCoorde,event.label);						
+		}	
+		
+		private function addEvento():void{			
+			var ae:formaEvento=formaEvento(PopUpManager.createPopUp(this,formaEvento,true));
+			ae.usuario=this.usuario;	
+			ae.addEventListener("Ubicar",ubicar);
+			PopUpManager.centerPopUp(ae);
+		}			
+		
+	]]>
+</mx:Script>
+	<mx:states>
+		<mx:State name="cat_cuencas" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_cuencas x="10" y="10"/>								
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de cuencas"/>
+		</mx:State>
+		<mx:State name="cat_municipios" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_municipios x="10" y="10" usuario="{usuario}"/>				
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de municipios"/>
+		</mx:State>	
+		<mx:State name="cat_sitios" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_sitios x="10" y="10" id="sitios" Ubicar="{ubicar(event as eventCoorde)}"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de sitios"/>
+		</mx:State>
+		<mx:State name="cat_sitios_tmp" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_sitios_tmp x="10" y="10" id="sitios_tmp" Ubicar="{ubicar(event as eventCoorde)}"/> 
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de sitios solicitados"/>
+		</mx:State>
+		<mx:State name="cat_gerencias" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_gerencias x="10" y="10"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de gerencias regionales de CAEM"/>
+		</mx:State>
+		<mx:State name="cat_dependencias" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_dependencias x="10" y="10"/>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de organismos operadores"/>
+		</mx:State>
+		<mx:State name="cat_acciones" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_acciones/>				
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de acciones"/>
+		</mx:State>
+		<mx:State name="cat_obras" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_obras x="10" y="10" width="100%"/>				
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de obras"/>
+		</mx:State>
+		<mx:State name="cat_causas" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_causas x="10" y="10" width="100%"/>				
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de causas"/>
+		</mx:State>
+		<mx:State name="listEventosAll" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<ns1:listEventosAll x="10" y="10" id="eventosAll" Ubicar="{ubicar(event as eventCoorde)}" mapa="{elMapa.googleMap}"/>				
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Lista de eventos"/>
+		</mx:State>
+		<mx:State name="cat_eventos" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_eventos x="10" y="10">
+				</admin:cat_eventos>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de eventos"/>
+		</mx:State>
+		<mx:State name="cat_usuarios" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<admin:cat_usuarios x="10" y="10" width="100%">
+				</admin:cat_usuarios>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Catálogo de usuarios"/>
+		</mx:State>
+		<mx:State name="glosario" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<ns1:glosario x="10" y="10" width="100%">
+					
+				</ns1:glosario>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Glosario de términos"/>
+		</mx:State>
+	</mx:states>
+	<ns1:mapContainer id="elMapa" width="100%" height="100%"  mapReady="loadCuencas();"/>			
+	<ns1:header id="header" width="100%" userType="{usuario.tipo}"  userName="{usuario.name}"/>
+	<mx:Panel title="Menú" xmlns:mx="http://www.adobe.com/2006/mxml"  verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		layout="absolute" width="150" styleName="PanelVerde" y="70" height="320" left="10" id="panel1">		
+		<mx:Accordion width="100%" height="100%" paddingLeft="0" paddingRight="0" headerStyleName="AcordionHeaderMenu">
+			
+			<mx:VBox label="Catálogos geográficos" width="100%" height="100%" verticalGap="5" paddingTop="5" paddingLeft="0" paddingRight="0" >
+				<mx:Button  width="100%"  label="Cuencas" click="{currentState='cat_cuencas';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Municipios" click="{currentState='cat_municipios';canvas2.visible=true}"  styleName="BotonMenuSkin" buttonMode="true"/>				
+				<mx:Button  width="100%"  label="Sitios" click="{currentState='cat_sitios';canvas2.visible=true}"  styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Sitios solicitados" click="{currentState='cat_sitios_tmp';canvas2.visible=true}"  styleName="BotonMenuSkin" buttonMode="true"/>
+			</mx:VBox>	
+			<mx:VBox label="Eventos" width="100%" height="100%" verticalGap="5" paddingTop="5" paddingLeft="0" paddingRight="0" >
+				<mx:Button  width="100%"  label="Agregar nuevo evento" toolTip="Seleccione esta opción para añadir un nuevo evento."
+					click="addEvento()"  styleName="BotonMenuSkin" buttonMode="true"  id="AEBTN" />
+				<mx:Button  width="100%"  label="Ver eventos" click="currentState='listEventosAll';eventosAll.usuario=this.usuario;eventosAll.Init();canvas2.visible=true" styleName="BotonMenuSkin" buttonMode="true"/>
+			</mx:VBox>
+			<mx:VBox label="Catálogos generales" width="100%" height="100%" verticalGap="5" paddingTop="5" paddingLeft="0" paddingRight="0" >
+				<mx:Button  width="100%"  label="Eventos" click="{currentState='cat_eventos';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Usuarios" click="{currentState='cat_usuarios';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Gerencias" click="{currentState='cat_gerencias';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Dependencias" click="{currentState='cat_dependencias';canvas2.visible=true}"  styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Acciones" click="{currentState='cat_acciones';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Obras" click="{currentState='cat_obras';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Causas" click="{currentState='cat_causas';canvas2.visible=true}" styleName="BotonMenuSkin" buttonMode="true"/>
+				<mx:Button  width="100%"  label="Glosario" click="{currentState='glosario';canvas2.visible=true}"  styleName="BotonMenuSkin" buttonMode="true"/>
+			</mx:VBox>				
+		</mx:Accordion>
+	</mx:Panel>
+	
+	<obj:xugarWindowLite y="69" minY="69" width="620" height="320"  visible="false" id="canvas2"  backgroundColor="#F3F3F3" styleName="PanelVerde" minX="170" x="170" close_hide="hide" />		
+</mx:Canvas>

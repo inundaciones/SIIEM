@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 addedToStage="loadUsuarios()" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.rpc.remoting.RemoteObject;
+	import mx.managers.CursorManagerPriority;
+	import mx.controls.Alert;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	import mx.collections.ArrayCollection;
+	import mx.managers.CursorManager;
+	import mx.managers.PopUpManager;
+   	import obj.CAEM.*;
+    
+    [Embed(source="assets/cursor.swf")]
+		private var cursorCAEM:Class;
+            
+    private function loadUsuarios(event:Event=null):void{
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='userController';
+    	ro.addEventListener(ResultEvent.RESULT,loadResult);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.listUsers();
+    }                 
+	private function loadResult(event:ResultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);                         
+		dgBasic.dataProvider=event.result as Array;	
+	}
+   
+	private function faultListener(event:FaultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		Alert.show(event.fault.message, "Error");
+	}
+	
+	private function addUsr():void{
+		var uf:formaUsuario=formaUsuario(PopUpManager.createPopUp(this,formaUsuario,true));
+		uf.addEventListener('Saved',loadUsuarios);
+		PopUpManager.centerPopUp(uf);
+	}
+	
+	 private function txtTipo(o:Object,dgc:DataGridColumn):String{
+			var s:String='';
+			if(o.tipo=='A'){
+			s='ADMINISTRADOR';
+			}
+			if(o.tipo=='M'){
+			s='MUNICIPIO';
+			}
+			if(o.tipo=='G'){
+			s='GERENCIA';
+			}
+			if(o.tipo=='T'){
+			s='TOTAL';
+			}
+			if(o.tipo=='O'){
+			s='OBSERVADOR';
+			}
+			
+			
+			return s;
+			
+
+	   }
+		]]>
+	</mx:Script>
+	<mx:VBox y="0" paddingLeft="10" paddingRight="10" width="100%" height="100%" paddingTop="10" paddingBottom="10">	
+		<mx:DataGrid x="9.15" y="41.6" id="dgBasic" width="100%" height="100%">
+			<mx:columns>						
+				<mx:DataGridColumn width="250" headerText="Nombre" dataField="name"/>
+				<mx:DataGridColumn headerText="Login" dataField="login"/>				
+				<mx:DataGridColumn width="200" headerText="Municipio" dataField="txt_municipio" dataTipField="txt_municipio"/>				
+				<mx:DataGridColumn width="35" headerText="Tipo" editorDataField="tipo" rendererIsEditor="true"  
+					itemRenderer="obj.items.userDataGridRender"/>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:HBox width="100%" horizontalAlign="right">
+			<mx:Button y="255" label="Agregar Usuario" right="10" click="addUsr()"/>			
+		</mx:HBox>
+	</mx:VBox>	
+	
+</mx:Canvas>

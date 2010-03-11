@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="300" height="20"
+	 backgroundColor="#FFFFFF">
+<mx:Script>
+	<![CDATA[
+		
+		import mx.managers.PopUpManager;
+		
+		public var ur:URLRequest;
+		public var fName:String='eventi.pdf';
+		[Bindable]
+		private var fr:FileReference=new FileReference();
+		[Bindable]
+		public var indet:Boolean=true;
+		public var bTotal:Number=0;
+		
+		
+		public function Download():void{			
+			fr.addEventListener(Event.CANCEL,cancelHandler);
+			fr.addEventListener(ProgressEvent.PROGRESS,progressHandler);
+			fr.addEventListener(Event.COMPLETE,completeHandler);
+			fr.download(ur,fName);
+		}
+		
+		private function cancelHandler(event:Event):void{
+			PopUpManager.removePopUp(this);
+		}
+		
+		private function progressHandler(event:ProgressEvent):void{			
+			pg.setProgress(event.bytesLoaded,bTotal);
+			pg.validateNow();
+		}
+		
+		private function completeHandler(event:Event):void{
+			PopUpManager.removePopUp(this);
+		}
+		
+	]]>
+</mx:Script>
+	<mx:ProgressBar horizontalCenter="0" verticalCenter="0" label="" id="pg"  indeterminate="{indet}" enabled="true" height="10"
+		source="{fr}"  mode="manual"/>	
+</mx:Canvas>

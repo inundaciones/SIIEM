@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="100%" height="100%" 
+	xmlns:admin="views.admin.*" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#FFFFFF, #E7E7E7]" 
+	xmlns:user="views.user.*" xmlns:ns1="views.shared.*" currentState="loginState" preloader="preloaders.CustomPreloader">
+	<mx:states>
+		<mx:State name="adminState">
+			<mx:AddChild position="lastChild">
+				<admin:adminMain x="0" y="0" usuario="{usuario}" id="admin"/>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="userState">
+			<mx:AddChild position="lastChild">
+				<user:userMain x="0" y="0" usuario="{usuario}" id="user"/>				
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="loginState">
+			<mx:AddChild position="lastChild">
+			 	<ns1:loginView x="10" y="70" logOk="checkLog()"/>				
+			</mx:AddChild>
+			<mx:SetProperty name="width" value="100%"/>
+			<mx:SetProperty name="height" value="100%"/>
+		</mx:State>
+	</mx:states>
+<mx:Style source="estilos.css"/> 
+<mx:Script>
+	<![CDATA[
+		import views.admin.formaUsuario;
+		import obj.CAEM.usuarioCAEM;
+		import mx.managers.PopUpManager;
+		
+		public var preURL:String='http://caem.equidna.com/';
+		
+		
+		[Bindable]
+			public var usuario:usuarioCAEM=new usuarioCAEM();
+			
+		[Embed(source="assets/logoCaemGris.png")]
+        [Bindable]
+        public var logoGris:Class; 
+		
+		[Embed(source="assets/logoCompromiso.svg")]
+        [Bindable]
+        public var compromiso:Class; 
+        [Embed(source="assets/logoAtlas.png")]
+        [Bindable]
+        public var logoAtlas:Class; 
+		[Embed(source="assets/logoEstado.png")]
+        [Bindable]
+        public var logoEstado:Class; 
+        	
+		private function checkLog():void{
+			if(usuario.tipo=='A'){
+				this.currentState='adminState';
+				admin.usuario=usuario;
+			}else{
+				this.currentState='userState';
+				user.usuario=usuario;
+			}
+		}	 
+		
+		                		
+	]]>
+</mx:Script>	
+	<mx:Canvas x="0" y="0" width="100%" height="62" backgroundColor="#FFFFFF">
+		<mx:Image source="{compromiso}" right="10" top="6"/>
+		<mx:Image source="{logoAtlas}" top="4"  horizontalCenter="0"/>
+		<mx:Image source="{logoEstado}" top="4" left="10"/>
+	</mx:Canvas>
+	<mx:Image source="{logoGris}" horizontalCenter="0" verticalCenter="0"/>
+</mx:Application>

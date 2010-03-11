@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" 
+	xmlns:text="flash.text.*" xmlns:maps="com.google.maps.*" xmlns:geo="obj.geo.*" xmlns:shared="views.shared.*">
+<mx:Metadata>		
+	[Event(name="mapReady")]
+</mx:Metadata>
+
+	<mx:Script>
+		<![CDATA[
+			import obj.geo.Icono;
+			import com.google.maps.interfaces.IPane;
+			import com.google.maps.LatLngBounds;
+			import obj.geo.MarkerCAEM;
+			import com.google.maps.InfoWindowOptions;
+			import com.google.maps.MapMouseEvent;
+			import com.google.maps.extras.markerclusterer.UnitMarker;
+			import com.google.maps.extras.markerclusterer.MarkerClusterer;
+			import com.google.maps.controls.ControlPosition;
+			import com.google.maps.controls.ZoomControlOptions;
+			import com.google.maps.controls.MapTypeControl;
+			import com.google.maps.controls.ZoomControl;
+			import com.google.maps.overlays.MarkerOptions;
+			import com.google.maps.overlays.Marker;
+			import com.google.maps.LatLng;
+			
+			import mx.core.UIComponent;
+			import obj.CAEM.sitioCAEM;
+			import obj.CAEM.municipioCAEM;
+			import obj.CAEM.localidadCAEM;
+						
+						
+			import mx.rpc.remoting.RemoteObject;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import mx.managers.CursorManager;
+			import mx.managers.CursorManagerPriority;
+			import mx.controls.Alert;
+									 
+			import obj.MarcadorSitio;			
+			import obj.UTMLatLon;
+			public var mapaX:Number;
+			public var mapaY:Number;
+			
+			//private var marcas:Array= new Array();
+			
+			private var _markerCluster:MarkerClusterer;
+			
+			[Embed(source="assets/cursor.swf")]
+				private var cursorCAEM:Class;   
+			
+			[Embed(source="assets/markerIcon.png")]
+   				private var _markerIcon:Class;
+   																
+			[Bindable]
+			private var textoLegal2:String="Dirección General de Programa Hidráulico Parque de Orizaba No. 7 Piso 8 Col. El Parque, C.P. 53398, Naucalpan de Juárez, Estado de México Tel. 5358-6868 <u><a href='mailto:dgphinformatica@prodigy.net.mx' >dgphinformatica@prodigy.net.mx<a></u>";
+			
+			private var gotaPane:IPane;
+							
+			private function Init():void{
+				var e:Event=new Event('mapReady');
+				this.dispatchEvent(e);
+				gotaPane=googleMap.getPaneManager().createPane(googleMap.getPaneManager().paneCount);
+			}	
+		
+			public function centrarMapaSinGota(x:Number, y:Number, z:Number):void{				
+				var ll:LatLng=new LatLng(x,y);
+				googleMap.setCenter(ll);								
+				googleMap.setZoom(z,true);	
+			}
+				
+			public function centrarMapa(x:Number,y:Number,label:String):void{
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=x;
+				ull.UTMy=y;
+				ull.UTMToLatLon();
+			
+				var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+				googleMap.setCenter(ll);
+				
+				gotear(ull.Lat,ull.Lon,label);
+				googleMap.setZoom(15,true);				
+												
+			}
+			
+			private function gotear(lat:Number,lon:Number,label:String):void{
+				gotaPane.clear();
+				var ll:LatLng=new LatLng(lat,lon);				
+				var mo:MarkerOptions=new MarkerOptions();
+				
+				mo.icon=new gota();
+				mo.hasShadow=true;
+				mo.tooltip= label;
+				var marker:Marker = new Marker(ll,mo);
+				gotaPane.addOverlay(marker);				
+			}
+			
+			public function marcar(sit:sitioCAEM, mun:municipioCAEM):void{
+			
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=parseFloat(sit.lat);
+				ull.UTMy=parseFloat(sit.lon);
+				ull.UTMToLatLon();
+				var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+				
+				var mo:MarkerOptions=new MarkerOptions();
+				mo.tooltip= sit.clave+"-"+sit.name+"\n"+ mun.name+"\nReincidencia: "+sit.reincidencia+"\nPoblación afectada: "+sit.poblacion;				
+				mo.icon= new Icono(sit.poblacion,sit.reincidencia);
+				mo.hasShadow=true;
+								
+			   var marker:MarkerCAEM= new MarkerCAEM(ll,mo);
+			   	marker.sitio=sit;
+			   	googleMap.addOverlay(marker);			 	
+					
+			}
+			
+			
+			private function mapReady():void{
+				
+				var e:Event=new Event('mapReady');
+				this.dispatchEvent(e);			
+			}			
+			
+			private function setll():void{
+				if(googleMap.mouseLatLng!=null){
+					llLabel.text="Latitud: "+googleMap.mouseLatLng.lat().toString()+" Longitud: "+googleMap.mouseLatLng.lng();
+				}	
+			}
+		]]>
+	</mx:Script>	
+	<geo:Mapa  width="100%" bottom="25" top="60"  x="0" id="googleMap"  
+		key="ABQIAAAAltyW0IXKxgyIZiznmfD1YxRRYEiY5W53UzZqN_1nV7KPQsxs1hSy9x6aMAHEi6sxN46AHryu3MNQFg" countryCode="MX" mapevent_mapready="Init();"
+		 mouseMove="setll()"/>
+	<mx:Label id="llLabel" text="Latitud:0 Longitud:0" horizontalCenter="0" top="70" fontWeight="bold" color="#000000"/>		 
+	<mx:Canvas   width="100%" height="25" horizontalCenter="0" bottom="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" backgroundColor="#FFFFFF">
+			<mx:Text selectable="false" color="#000000" text="Gobierno del Estado de México | Secretaría del Agua y Obra Pública | Comisión del Agua del Estado de México" width="100%" height="17" fontSize="10" horizontalCenter="0" y="-1" textAlign="center" fontWeight="bold"/>
+			<mx:Text selectable="false" htmlText="{textoLegal2}" color="#000000" fontSize="8" y="12" horizontalCenter="0" textAlign="center" width="100%" text="Manzana"/>
+	</mx:Canvas>
+	<mx:Label id="lblCoord" color="#FF0000" fontWeight="bold" fontFamily="Arial" horizontalCenter="0" top="64" height="18"/>		
+</mx:Canvas>
+
+

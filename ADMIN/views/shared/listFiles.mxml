@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="500" height="300"
+	 showCloseButton="true" close="PopUpManager.removePopUp(this);" title="Archivos adjuntos">
+	<mx:Script>
+		<![CDATA[
+			import mx.managers.CursorManagerPriority;
+			import obj.CAEM.basicItemCAEM;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.managers.CursorManager;
+			import obj.CAEM.eventoCAEM;
+			import mx.managers.PopUpManager;
+			import mx.rpc.remoting.RemoteObject;
+			import mx.controls.Alert;
+			
+			[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+			
+			[Bindable]
+				public var evento:eventoCAEM;
+										
+			private function faultListener(event:FaultEvent):void {
+				Alert.show(event.fault.message, "Error");
+			}
+			
+			private function download():void{
+				if(dgFiles.selectedIndex>-1){
+					var ur:URLRequest=new URLRequest((this.parentApplication as admin_atlas).preURL+'files/download.php');
+					var vars:URLVariables=new URLVariables();
+					vars.URI_FILE=(dgFiles.selectedItem as basicItemCAEM).data1;
+					ur.data=vars;
+					ur.method='POST';
+					
+					var dv:downloadView=downloadView(PopUpManager.createPopUp(this,downloadView,true));
+					dv.ur=ur;
+					dv.indet=false;
+					dv.fName=(dgFiles.selectedItem as basicItemCAEM).name;
+					dv.bTotal=parseInt((dgFiles.selectedItem as basicItemCAEM).data3);
+					PopUpManager.centerPopUp(dv);
+					dv.Download();
+				}
+			}
+			
+			private function previewFunction(o:Object,dc:DataGridColumn):String{
+				var s:String='';				
+				if(o.data2=='JPG'||o.data2=='PNG'||o.data2=='BMP'||o.data2=='GIF'){
+					s=(this.parentApplication as admin_atlas).preURL+'files/preview.php?URI_FILE='+o.data1+'&WIDTH=100&HEIGHT=100';
+				}else{
+					s=(this.parentApplication as admin_atlas).preURL+'icons/'+String(o.data2).toLowerCase()+'.png';
+				}								
+				return s;
+			}
+		]]>
+	</mx:Script>
+	<mx:DataGrid left="0" top="0" bottom="20" right="0" dataProvider="{evento.files}" id="dgFiles" rowHeight="100">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Vista previa" itemRenderer="mx.controls.Image" labelFunction="previewFunction" width="100" textAlign="center"/>
+			<mx:DataGridColumn headerText="Nombre" dataField="name"/>
+			<mx:DataGridColumn headerText="Tipo" dataField="data2"/>			
+			<mx:DataGridColumn headerText="Tamaño" dataField="data3"/>			
+		</mx:columns>
+	</mx:DataGrid>
+	<mx:Button label="Descargar archivo" right="0" bottom="0" click="download();"/>
+	
+</mx:TitleWindow>

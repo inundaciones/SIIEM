@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 addedToStage="loadCuencas();" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+	
+	import mx.controls.Alert;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	import mx.collections.ArrayCollection;
+	import mx.managers.PopUpManager;
+   	import obj.CAEM.*;    
+   	import mx.managers.CursorManagerPriority;
+   	import mx.managers.CursorManager;
+   	import mx.rpc.remoting.RemoteObject;
+   	
+    public var usuario:usuarioCAEM;
+    
+     [Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;                 
+	
+	 private function loadCuencas():void{		    	
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGeograficos';
+    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.loadCuencas();
+    }                 
+	private function loadCuencasDataListener(event:ResultEvent):void {                         
+		cmbCuencas.dataProvider=event.result as Array;
+		cmbCuencas.selectedIndex=-1;
+		cmbCuencas.text='Seleccione una cuenca';
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+	}
+   
+	private function faultListener(event:FaultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		Alert.show(event.fault.message, "Error");		
+	}
+	
+	private function showDirectorio():void{
+		var wdm:windowDirectorioMunicipio=windowDirectorioMunicipio(PopUpManager.createPopUp(this,windowDirectorioMunicipio,true));
+		wdm.municipio=dgMunicipios.selectedItem as municipioCAEM;
+		wdm.usuario=usuario;
+		PopUpManager.centerPopUp(wdm);
+	}
+		]]>
+	</mx:Script>
+		
+	<mx:VBox y="0" paddingLeft="10" paddingRight="10" width="100%" height="100%" paddingTop="10" paddingBottom="10">
+		<mx:HBox>
+			<mx:Label x="10" y="12" text="Cuenca:"/>
+			<mx:ComboBox x="65" y="10" width="250" id="cmbCuencas"  labelField="name"/>
+			<mx:Spacer width="55"/>
+			<mx:Label x="388" y="12" text="Dar doble click para ver el directorio."/>			
+		</mx:HBox>
+		<mx:DataGrid  id="dgMunicipios" width="100%" height="100%"
+			 dataProvider="{(cmbCuencas.selectedItem as cuencaCAEM).municipios}" doubleClick="showDirectorio()" doubleClickEnabled="true">
+			<mx:columns>						
+				<mx:DataGridColumn headerText="Nombre" dataField="name"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:VBox>
+	
+</mx:Canvas>

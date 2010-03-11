@@ -1,0 +1,269 @@
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 38
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 48
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 59
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 70
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 81
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 91
+[15-Aug-2009 00:54:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 101
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 19
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 42
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 52
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 63
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 74
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 85
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 96
+[15-Aug-2009 01:09:26] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 107
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 19
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 42
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 52
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 63
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 74
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 85
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 96
+[15-Aug-2009 01:09:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 107
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 19
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 42
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 52
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 63
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 74
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 85
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 96
+[15-Aug-2009 01:10:20] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 107
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 19
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 42
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 52
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 63
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 74
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 85
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 96
+[15-Aug-2009 01:10:21] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 107
+[25-Aug-2009 21:01:41] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 19
+[25-Aug-2009 21:07:57] PHP Warning:  Missing argument 2 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 18 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:07:57] PHP Warning:  Missing argument 3 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 18 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:12:06] PHP Warning:  Missing argument 2 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 23 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:12:06] PHP Warning:  Missing argument 3 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 23 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:19:24] PHP Parse error:  syntax error, unexpected '}' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 23
+[25-Aug-2009 21:19:40] PHP Parse error:  syntax error, unexpected '}' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 23
+[25-Aug-2009 21:20:01] PHP Parse error:  syntax error, unexpected '}' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 23
+[25-Aug-2009 21:20:50] PHP Parse error:  syntax error, unexpected '}' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 23
+[25-Aug-2009 21:45:52] PHP Parse error:  syntax error, unexpected T_VARIABLE in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 129
+[25-Aug-2009 21:46:37] PHP Warning:  Missing argument 2 for Cpdf::addPngFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2637
+[25-Aug-2009 21:46:37] PHP Warning:  Missing argument 3 for Cpdf::addPngFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2637
+[25-Aug-2009 21:46:58] PHP Fatal error:  Call to undefined method Cezpdf::addJpgFromFile() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128
+[25-Aug-2009 21:47:14] PHP Warning:  Missing argument 2 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:47:14] PHP Warning:  Missing argument 3 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:47:43] PHP Warning:  Missing argument 2 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 21:47:43] PHP Warning:  Missing argument 3 for Cpdf::addJpegFromFile(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 128 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2825
+[25-Aug-2009 22:33:06] PHP Fatal error:  Call to undefined method Cezpdf::SetXY() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 42
+[25-Aug-2009 22:33:18] PHP Fatal error:  Call to undefined method Cezpdf::SetDrawColor() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 43
+[25-Aug-2009 22:33:23] PHP Fatal error:  Call to undefined method Cezpdf::SetDrawColor() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 43
+[25-Aug-2009 22:33:30] PHP Fatal error:  Call to undefined method Cezpdf::Cell() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 44
+[25-Aug-2009 23:13:18] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:13:28] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:13:56] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:14:29] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:17:07] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:17:22] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:17:54] PHP Warning:  Missing argument 4 for Cpdf::addText(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 39 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2156
+[25-Aug-2009 23:31:24] PHP Parse error:  syntax error, unexpected ';' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 40
+[25-Aug-2009 23:35:43] PHP Parse error:  syntax error, unexpected '=' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 34
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 14
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 37
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 47
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 58
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 69
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 80
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 91
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 102
+[28-Aug-2009 21:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 112
+[28-Aug-2009 21:32:24] PHP Fatal error:  Call to undefined function  subsrt() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 43
+[28-Aug-2009 21:39:09] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 148
+[28-Aug-2009 21:40:22] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:40:23] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:40:25] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:40:40] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:40:41] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:40:42] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:40:43] PHP Fatal error:  Function name must be a string in /home/equidna/public_html/tester/atlas/includes/aux.php on line 149
+[28-Aug-2009 21:57:36] PHP Parse error:  syntax error, unexpected '}' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 41
+[28-Aug-2009 21:58:07] PHP Parse error:  syntax error, unexpected '<' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 87
+[28-Aug-2009 22:02:22] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:05:10] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:05:12] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:05:13] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:06:56] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:07:52] PHP Parse error:  syntax error, unexpected T_STRING, expecting T_FUNCTION in /home/equidna/public_html/tester/atlas/www/reports/Creport.php on line 5
+[28-Aug-2009 22:08:12] PHP Parse error:  syntax error, unexpected T_STRING in /home/equidna/public_html/tester/atlas/www/reports/Creport.php on line 8
+[28-Aug-2009 22:08:39] PHP Parse error:  syntax error, unexpected ';', expecting T_FUNCTION in /home/equidna/public_html/tester/atlas/www/reports/Creport.php on line 33
+[28-Aug-2009 22:09:11] PHP Warning:  include(class.ezpdf.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/equidna/public_html/tester/atlas/www/reports/Creport.php on line 2
+[28-Aug-2009 22:09:11] PHP Warning:  include(class.ezpdf.php) [<a href='function.include'>function.include</a>]: failed to open stream: No such file or directory in /home/equidna/public_html/tester/atlas/www/reports/Creport.php on line 2
+[28-Aug-2009 22:09:11] PHP Warning:  include() [<a href='function.include'>function.include</a>]: Failed opening 'class.ezpdf.php' for inclusion (include_path='.:/usr/lib/php:/usr/local/lib/php:/home/equidna/usr/local') in /home/equidna/public_html/tester/atlas/www/reports/Creport.php on line 2
+[28-Aug-2009 22:09:11] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:09:46] PHP Fatal error:  Cannot redeclare class Cezpdf in /home/equidna/public_html/tester/atlas/includes/pdf/class.ezpdf.php on line 1554
+[28-Aug-2009 22:10:42] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:11:11] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:11:13] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:11:43] PHP Fatal error:  Call to undefined method Cezpdf::this-() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[28-Aug-2009 22:11:56] PHP Fatal error:  Call to undefined method Cezpdf::dots() in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2132
+[29-Aug-2009 15:33:20] PHP Fatal error:  Call to undefined method Cezpdf::setY() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 52
+[30-Aug-2009 23:40:14] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/includes/aux.php on line 18
+[30-Aug-2009 23:49:28] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/includes/aux.php on line 18
+[31-Aug-2009 00:56:24] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 16
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 76
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 86
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 97
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 108
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 119
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 130
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 141
+[31-Aug-2009 00:56:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 152
+[31-Aug-2009 02:08:25] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 61 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:25] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 90 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:25] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 117 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:25] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 146 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:25] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 165 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:35] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 61 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:35] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 90 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:35] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 117 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:35] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 146 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:08:35] PHP Warning:  Missing argument 4 for Cpdf::rectangle(), called in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 165 and defined in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 1843
+[31-Aug-2009 02:23:04] PHP Parse error:  syntax error, unexpected T_WHILE in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 133
+[31-Aug-2009 02:24:12] PHP Parse error:  syntax error, unexpected T_WHILE in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 133
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 16
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 76
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 86
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 97
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 108
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 119
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 130
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 141
+[31-Aug-2009 20:04:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 152
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 16
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 76
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 86
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 97
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 108
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 119
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 130
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 141
+[31-Aug-2009 20:04:59] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 152
+[02-Sep-2009 20:33:08] PHP Parse error:  syntax error, unexpected ',' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 345
+[02-Sep-2009 20:34:00] PHP Parse error:  syntax error, unexpected ',' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 328
+[02-Sep-2009 20:34:08] PHP Parse error:  syntax error, unexpected ',' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 328
+[03-Sep-2009 10:24:11] PHP Parse error:  syntax error, unexpected '<', expecting T_VARIABLE or '$' in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 399
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 16
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 76
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 86
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 97
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 108
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 119
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 130
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 141
+[03-Sep-2009 11:16:37] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 152
+[03-Sep-2009 12:30:03] PHP Fatal error:  Call to a member function addJpegFromFile() on a non-object in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 438
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 16
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 76
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 86
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 97
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 108
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 119
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 130
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 141
+[03-Sep-2009 12:30:50] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 152
+[03-Sep-2009 12:55:10] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 425
+[03-Sep-2009 12:56:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 425
+[03-Sep-2009 12:58:49] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 434
+[03-Sep-2009 13:00:53] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 434
+[03-Sep-2009 13:03:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 441
+[03-Sep-2009 13:04:05] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:05:12] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:05:54] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:06:41] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:07:24] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:08:29] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:10:09] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:11:49] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 453
+[03-Sep-2009 13:16:31] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 446
+[03-Sep-2009 13:17:57] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 446
+[03-Sep-2009 13:18:07] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 446
+[03-Sep-2009 13:20:22] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 470
+[03-Sep-2009 13:21:34] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 470
+[03-Sep-2009 13:24:04] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 470
+[03-Sep-2009 13:58:00] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 13:58:35] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 13:59:36] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 14:34:56] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 463
+[03-Sep-2009 14:35:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 463
+[03-Sep-2009 14:49:13] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 471
+[03-Sep-2009 14:49:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 471
+[03-Sep-2009 14:51:29] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 471
+[03-Sep-2009 14:52:18] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 14:56:45] PHP Fatal error:  Call to undefined method Cezpdf::addTextWarp() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 302
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:04] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:14] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:31] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  Division by zero in /home/equidna/public_html/tester/atlas/includes/pdf/class.pdf.php on line 2351
+[03-Sep-2009 14:57:49] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 14:58:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 14:58:35] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 15:00:06] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 15:00:24] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 15:00:42] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 15:01:40] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 475
+[03-Sep-2009 15:07:19] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 476
+[03-Sep-2009 15:09:04] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 476
+[03-Sep-2009 15:09:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 476
+[03-Sep-2009 15:10:25] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 476
+[03-Sep-2009 15:11:15] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:12:01] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:13:27] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:14:10] PHP Fatal error:  Call to undefined function  gettextwidth() in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 209
+[03-Sep-2009 15:15:35] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:15:41] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:17:45] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:18:23] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:18:41] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:19:30] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 478
+[03-Sep-2009 15:20:12] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 479
+[03-Sep-2009 15:24:23] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 479
+[03-Sep-2009 15:24:53] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 479
+[03-Sep-2009 15:25:01] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 479
+[03-Sep-2009 15:27:53] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento_test.php on line 479
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 18
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 32
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/includes/aux.php on line 18
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 157
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_lengths(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 173
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 188
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_lengths(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 266
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 281
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_lengths(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 362
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 374
+[05-Sep-2009 17:55:16] PHP Warning:  mysql_fetch_object(): supplied argument is not a valid MySQL result resource in /home/equidna/public_html/tester/atlas/www/reports/ficha_evento.php on line 466

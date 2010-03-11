@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	 addedToStage="loadBasic('OBRAS');" width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+	
+	import mx.controls.Alert;
+	import mx.rpc.events.FaultEvent;
+	import mx.rpc.events.ResultEvent;
+	import mx.collections.ArrayCollection;
+   	import obj.CAEM.*;
+     import mx.rpc.remoting.RemoteObject;
+    import mx.managers.CursorManagerPriority;
+   	import mx.managers.CursorManager;
+     
+     [Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;                 
+	
+	 private function loadBasic(Basic:String):void{		    	
+    	var ro:RemoteObject=new RemoteObject('zend');
+    	ro.source='catalogosGenerales';
+    	ro.addEventListener(ResultEvent.RESULT,loadBasicDataListener);
+    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+    	ro.loadBasic(Basic);
+    }
+                     
+	private function loadBasicDataListener(event:ResultEvent):void {                         
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		dgBasic.dataProvider=event.result as Array;	
+	}
+   
+	private function faultListener(event:FaultEvent):void {
+		CursorManager.removeCursor(CursorManager.currentCursorID);
+		Alert.show(event.fault.message, "Error");
+	}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox y="0" paddingLeft="10" paddingRight="10" width="100%" height="100%" paddingTop="10" paddingBottom="10">
+		<mx:DataGrid id="dgBasic" width="100%" height="100%">
+			<mx:columns>							
+				<mx:DataGridColumn headerText="Nombre" dataField="name" itemRenderer="mx.controls.Label"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</mx:VBox>
+	
+</mx:Canvas>

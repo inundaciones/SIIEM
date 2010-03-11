@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" width="294" height="132"
+	  styleName="PanelGris" layout="absolute">
+	 <mx:Metadata>
+		[Event(name="logOk")]
+	</mx:Metadata>
+	<mx:Style source="estilos.css"/>
+	<mx:Script>
+		<![CDATA[
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.remoting.RemoteObject;
+			import mx.managers.CursorManagerPriority;
+			import mx.controls.Alert;
+			import obj.CAEM.usuarioCAEM;
+			import mx.managers.PopUpManager;
+			import mx.managers.CursorManager;
+			
+			[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+			
+			public var usuario:usuarioCAEM=new usuarioCAEM();
+			
+			private function tryLog():void{
+				usuario.login=txtLogin.text;
+				usuario.clear_pass=txtPass.text;
+				
+				var ro:RemoteObject=new RemoteObject('zend');
+				ro.source='userController';
+				ro.addEventListener(FaultEvent.FAULT,faultHandler);
+				ro.addEventListener(ResultEvent.RESULT,logResultHandler);
+				CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+				ro.loginUser(usuario);	
+			}
+			
+			private function faultHandler(event:FaultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				Alert.show(event.fault.toString(),"Error");				
+			}
+			
+			private function logResultHandler(event:ResultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				(this.parent as admin_atlas).usuario=event.result as usuarioCAEM;
+				if((this.parent as admin_atlas).usuario.uri_user!=''){
+					var e:Event=new Event('logOk');
+					this.dispatchEvent(e);
+				}else{
+					Alert.show("Datos Incorrectos","Error");
+				}
+					
+			}
+			
+			private function keyHandler(event:KeyboardEvent):void{
+				if(event.keyCode==13){
+					tryLog();
+				}
+			}
+		]]>
+	</mx:Script>
+	<mx:Label x="38" y="12" text="Usuario:"/>
+	<mx:TextInput id="txtLogin" x="98" y="10"/>
+	<mx:TextInput x="98" y="40" displayAsPassword="true" id="txtPass" keyUp="keyHandler(event as KeyboardEvent);"/>
+	<mx:Label x="10" y="42" text="Contraseña:"/>
+	<mx:Button label="Ingresar" right="36" bottom="10" click="tryLog()"/>
+</mx:Panel>

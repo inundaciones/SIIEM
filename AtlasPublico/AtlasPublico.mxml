@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" creationComplete="Init()"
+	 backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#FFFFFF, #E7E7E7]" preloader="preloaders.CustomPreloader" xmlns:maps="com.google.maps.*" xmlns:geo="obj.geo.*">
+	<mx:Image source="{logoGris}" horizontalCenter="0" verticalCenter="25"/>
+	
+		<mx:Canvas x="0" y="0" width="100%" height="62" backgroundColor="#FFFFFF">
+			<mx:Image source="{compromiso}" right="10" top="6"/>
+			<mx:Image source="{logoAtlas}" top="4"  horizontalCenter="0"/>
+			<mx:Image source="{logoEstado}" top="4" left="10"/>
+		</mx:Canvas>
+		
+	
+	<geo:Mapa  width="100%" bottom="25" top="60"  x="0" id="googleMap"  
+		key="ABQIAAAAltyW0IXKxgyIZiznmfD1YxRRYEiY5W53UzZqN_1nV7KPQsxs1hSy9x6aMAHEi6sxN46AHryu3MNQFg" countryCode="MX"
+		 mapevent_mapready="loadCuencas()"  />	 
+	<mx:Canvas   width="100%" height="25" horizontalCenter="0" bottom="0" horizontalScrollPolicy="off" verticalScrollPolicy="off" backgroundColor="#FFFFFF">
+			<mx:Text selectable="false" color="#000000" text="Gobierno del Estado de México | Secretaría del Agua y Obra Pública | Comisión del Agua del Estado de México" width="100%" height="17" fontSize="10" horizontalCenter="0" y="-1" textAlign="center" fontWeight="bold"/>
+			<mx:Text selectable="false" htmlText="{textoLegal2}" color="#000000" fontSize="8" y="12" horizontalCenter="0" textAlign="center" width="100%" text="Manzana"/>
+	</mx:Canvas>
+	<mx:Panel title="Menú" xmlns:mx="http://www.adobe.com/2006/mxml"  verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		layout="absolute" width="311" styleName="PanelVerde" y="66" height="460" left="5" id="panelMenu">		
+		<mx:Label x="10" y="0" text="Cuencas"/>
+		<mx:Label x="10" y="39" text="Municipios"/>
+		<mx:ComboBox  id="cmbCuenca" x="10" y="16" width="284" labelField="name" change="filtraSitios()"
+			 dataProvider="{cuencas}"/>			
+		<mx:ComboBox id="cmbMuni" x="10" y="56" width="284"  labelField="name" change="filtraSitios()"
+			 dataProvider="{(cmbCuenca.selectedItem as cuencaCAEM).municipios}"/>
+		<mx:ColumnChart  dataProvider="{ReParaGraf}"
+            showDataTips="true" x="10" y="93" id="reGraf" width="291" height="133">
+			 <mx:horizontalAxis>
+                <mx:CategoryAxis categoryField="name"/>
+            </mx:horizontalAxis>
+			<mx:series>
+				<mx:ColumnSeries  xField="name" yField="datos" displayName="Reincidencias"/>
+			</mx:series>
+		</mx:ColumnChart>
+		<mx:ColumnChart dataProvider="{PoParaGraf}" showDataTips="true" x="10" y="271" id="poGraf" width="291" height="133">
+			<mx:horizontalAxis>
+                <mx:CategoryAxis categoryField="name" />
+            </mx:horizontalAxis>
+			<mx:series>
+				<mx:ColumnSeries  xField="name" yField="datos" displayName="Población afectada"/>
+			</mx:series>
+		</mx:ColumnChart>
+		<mx:Label x="10" y="79" text="Reincidencia (años, color y número en marcador)"/>
+		<mx:Label x="4" y="255" text="Máximo de población afectada (tamaño de marcador)"/>
+		<mx:HSlider x="61.25" y="224" width="226.75" minimum="1" maximum="7" 
+			 allowThumbOverlap="true" thumbCount="2" snapInterval="1" 
+			 enabled="true" liveDragging="false" allowTrackClick="true"  
+			  showDataTip="true" 
+			 change="reSliding()" id="reSlide" height="23" labelOffset="-4" />
+		<mx:HSlider x="71.25" y="403" width="202.75" minimum="1" maximum="5" 
+			 allowThumbOverlap="true" thumbCount="2" snapInterval="1" 
+			 enabled="true" liveDragging="false" allowTrackClick="true" 
+			 showDataTip="false"  
+			 change="poSliding()" id="poSlide" height="23" labelOffset="-4"/>
+	</mx:Panel>
+	
+	<mx:Style source="estilos.css"/> 
+	<mx:Script>
+	<![CDATA[
+		import com.google.maps.LatLngBounds;
+		import obj.GrafPoblacion;
+		import obj.GrafReincidencias;
+		import obj.MarcadorSitio;		
+		import mx.collections.ArrayCollection;
+		import obj.geo.Icono;
+		import com.google.maps.MapMouseEvent;
+		import obj.geo.MarkerCAEM;
+		import com.google.maps.overlays.MarkerOptions;
+		import com.google.maps.LatLng;
+		import obj.UTMLatLon;
+		import com.google.maps.controls.MapTypeControl;
+		import com.google.maps.controls.ZoomControlOptions;
+		import com.google.maps.controls.ControlPosition;
+		import com.google.maps.controls.ZoomControl;
+		import obj.eventCoorde;
+		import obj.CAEM.*;		
+		import mx.managers.PopUpManager;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		import mx.controls.Alert;
+		import mx.managers.CursorManager;
+		import mx.rpc.remoting.RemoteObject;
+		import mx.managers.CursorManagerPriority;
+		
+		[Bindable]
+			private var textoLegal2:String="Dirección General de Programa Hidráulico Parque de Orizaba No. 7 Piso 8 Col. El Parque, C.P. 53398, Naucalpan de Juárez, Estado de México Tel. 5358-6868 <u><a href='mailto:dgphinformatica@prodigy.net.mx' >dgphinformatica@prodigy.net.mx<a></u>";
+			
+			
+		[Embed(source="assets/logoCaemGris.png")]
+        [Bindable]
+        public var logoGris:Class; 
+		
+		[Embed(source="assets/logoCompromiso.svg")]
+        [Bindable]
+        	public var compromiso:Class; 
+        [Embed(source="assets/logoAtlas.png")]
+        [Bindable]
+        	public var logoAtlas:Class; 
+		[Embed(source="assets/logoEstado.png")]
+        [Bindable]
+        	public var logoEstado:Class; 
+        [Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;   
+		[Bindable]	
+			private var startValue:int=1;
+		[Bindable]
+			private	var endValue:int=7;			
+		
+		[Bindable]	
+			private var startValuePo:int=1;
+		[Bindable]
+			private	var endValuePo:int=5;
+							
+		[Bindable]
+			private var sitios:Array= new Array();
+		[Bindable]
+			private var cuencas:Array=new Array();
+		
+            
+        [Bindable]
+        	private var ReParaGraf:GrafReincidencias= new GrafReincidencias();
+		
+		[Bindable]
+        	private var PoParaGraf:GrafPoblacion = new GrafPoblacion();
+					
+        
+        private function Init():void{
+			this.initControls();
+			googleMap.visible=false;
+			panelMenu.visible=false;
+			reSlide.values[0]=startValue;
+			reSlide.values[1]=endValue;
+			reSlide.tickValues= new Array(1,7);	
+			poSlide.values[0]=startValuePo;
+			poSlide.values[1]=endValuePo;
+			poSlide.tickValues= new Array(1,5);																										
+		}	
+			
+		private function initControls():void{
+			//OPCIONES Y CONTROL ZOOM
+			var zco:ZoomControlOptions=new ZoomControlOptions();
+			zco.position=new ControlPosition(ControlPosition.ANCHOR_TOP_RIGHT,10,40);				
+			var zC:ZoomControl=new ZoomControl(zco);				
+			googleMap.addControl(zC);			
+			googleMap.addControl(new  MapTypeControl());
+		}
+        
+		private function loadCuencas():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadCuencas();
+	    }
+		
+		private function loadCuencasDataListener(event:ResultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			cuencas=event.result as Array;
+			var c:cuencaCAEM=new cuencaCAEM();
+			c.id_cuenca='0';
+			c.name='Ver todos';
+			c.municipios=new Array();
+			cuencas.unshift(c);
+			
+			for each(var c:cuencaCAEM in cuencas){
+				var m:municipioCAEM=new municipioCAEM();
+				m.id_municipio='0';
+				m.name="Ver todos";
+				m.sitios=new Array()
+				c.municipios.unshift(m);
+			}
+			cmbCuenca.selectedIndex=0;
+			cmbMuni.selectedIndex=0;
+						
+			filtraSitios();		 			 		
+		}
+		
+		private function faultListener(event:FaultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			Alert.show(event.fault.message, "Error");
+		}
+		
+		
+		private function filtraSitios():void{
+			var selCuenca:cuencaCAEM=cmbCuenca.selectedItem as cuencaCAEM;
+			var selMunicipio:municipioCAEM=cmbMuni.selectedItem as municipioCAEM;
+			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+			this.sitios=new Array();
+			for each(var c:cuencaCAEM in cuencas){
+				if(c.id_cuenca==selCuenca.id_cuenca||selCuenca.id_cuenca=='0'){
+					for each(var m:municipioCAEM in c.municipios){
+						if(m.id_municipio==selMunicipio.id_municipio||selMunicipio.id_municipio=='0'){
+							for each(var s:sitioCAEM in m.sitios){
+								//AQUI VA EL FILTRO DE LA POBLACION Y REINCIDENCIA
+								if(parseInt(s.reincidencia)>=startValue&&parseInt(s.reincidencia)<=endValue){
+									if(poblacion(s.poblacion)>=startValuePo&&poblacion(s.poblacion)<=endValuePo){
+										sitios.push(s);		
+									}	
+								}								
+							}
+						}
+					}
+				}
+			}
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			pintaSitios();
+			
+		}
+		
+		
+		private function pintaSitios():void{
+			
+			CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+			
+			ReParaGraf.uno.datos=0;
+        	ReParaGraf.dos.datos=0;
+        	ReParaGraf.tres.datos=0;
+        	ReParaGraf.cuatro.datos=0;
+        	ReParaGraf.cinco.datos=0;
+        	ReParaGraf.seis.datos=0;
+        	ReParaGraf.siete.datos=0;
+        	
+        	PoParaGraf.uno.datos=0;
+        	PoParaGraf.dos.datos=0;
+        	PoParaGraf.tres.datos=0;
+        	PoParaGraf.cuatro.datos=0;
+        	PoParaGraf.cinco.datos=0;
+			
+			var zoom:Number=0;			
+			var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);				    	
+	    	var llb:LatLngBounds=new LatLngBounds();
+	    	var centro:LatLng;
+			
+			googleMap.clearOverlays();
+			
+			for each(var s:sitioCAEM in sitios){
+				//PINTA EL SITIO				
+				var m:municipioCAEM=new municipioCAEM();
+				m.id_municipio=s.id_municipio;
+				m.name=s.txt_municipio;
+				this.marcar(s,m);
+				
+				//ACTUALIZA LA GRAFICA
+				ReParaGraf.getItemAt(parseInt(s.reincidencia)-1).datos++;
+        		PoParaGraf.getItemAt(poblacion(s.poblacion)-1).datos++;
+				
+				
+				//EXTIENDE LOS BORDES				
+				ull.UTMx=parseFloat(s.lat);
+				ull.UTMy=parseFloat(s.lon);
+				ull.UTMToLatLon();					
+				var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+	    		llb.extend(ll);						
+																							
+			}		
+						
+			//VALIDA EL ZOOM Y CENTRO CORRECTOS
+			zoom=googleMap.getBoundsZoomLevel(llb);
+			centro=llb.getCenter();
+			if(centro.lat()==0||centro.lng()==0){
+				centro=new LatLng(19.32669491,-99.36859180);
+				zoom=10;
+			}else{
+				centrarMapaSinGota(centro.lat() ,centro.lng(),zoom);
+			}
+			//Da los datos a as Graficas
+			reGraf.dataProvider=ReParaGraf.source;
+        	poGraf.dataProvider=PoParaGraf.source;
+				
+			CursorManager.removeCursor(CursorManager.currentCursorID);				
+		}
+						
+	
+		public function marcar(sit:sitioCAEM, mun:municipioCAEM):void{				
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=parseFloat(sit.lat);
+				ull.UTMy=parseFloat(sit.lon);
+				ull.UTMToLatLon();
+				
+				var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+				
+				var mo:MarkerOptions=new MarkerOptions();
+				mo.tooltip= sit.clave+"-"+sit.name+"\n"+ mun.name+"\nReincidencia: "+sit.reincidencia+"\nPoblación afectada: "+sit.poblacion;				
+				mo.icon= new Icono(sit.poblacion,sit.reincidencia);//icono que se utiliza, es una gotita contexto y en ella se hacen los cáculos de tamaño y color
+				mo.hasShadow=true;
+				mo.clickable=true;
+				var marker:MarkerCAEM= new MarkerCAEM(ll,mo);
+			   	marker.sitio=sit;
+			   	
+			   	googleMap.addOverlay(marker);			   
+		}
+		
+		
+		
+		 public function centrarMapaSinGota(x:Number, y:Number, z:Number):void{				
+			var ll:LatLng=new LatLng(x,y);
+			googleMap.setCenter(ll);								
+			googleMap.setZoom(z,true);	
+			googleMap.visible=true;
+			panelMenu.visible=true;
+		}               
+			
+			
+		private function reSliding():void{				
+			if(reSlide.values[0]<=reSlide.values[1]){
+				startValue=reSlide.values[0];
+				endValue=reSlide.values[1];
+			}else{
+				startValue=reSlide.values[1];
+				endValue=reSlide.values[0];
+				
+			}
+			filtraSitios();
+		}
+			
+		private function poSliding():void{				
+			if(poSlide.values[0]<=poSlide.values[1]){
+				startValuePo=poSlide.values[0];
+				endValuePo=poSlide.values[1];
+			}else{
+				startValuePo=poSlide.values[1];
+				endValuePo=poSlide.values[0];
+				
+			}
+			filtraSitios();
+		}
+			    
+        private function poblacion(ps:String):int{
+			var p:Number= parseInt(ps);
+			var escala:int;
+			if(p<=100){
+				escala=1;
+			}else if(p>100 && p<=1000){
+				escala=2;
+			}else if(p>1000 && p<=5000){
+				escala=3;
+			}else if(p>5000 && p<=10000){
+				escala=4;
+			}else{
+				escala=5;
+			}
+			return escala;
+		}    
+	]]>
+</mx:Script>
+</mx:Application>

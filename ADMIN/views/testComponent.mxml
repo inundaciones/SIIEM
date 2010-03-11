@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="620" height="300">
+		<mx:Label x="10" y="12" text="Seleccione las causas de la problemática" fontSize="11" fontWeight="bold"/>
+		<mx:Label x="10" y="30" text="Catálogo de probables causas de un evento." fontSize="11" fontWeight="normal"/>
+		<mx:Label x="359" y="30" text="Lista de causa que provocaron el evento." fontSize="11" fontWeight="normal"/>
+		<mx:List height="214" left="10" width="250" top="50" id="lstCausasD" dataProvider="{causas_disponibles}" labelField="name" showDataTips="true"/>
+		<mx:List height="210" id="lstCausasS" dataProvider="{evento.causas}" labelField="name" showDataTips="true" width="250" x="360" y="50"/>
+		<mx:Button label="Añadir &gt;" toolTip="Añade la causa seleccionada en la lista." horizontalCenter="0" width="84" height="30" verticalCenter="-30" click="addCausa()"/>
+		<mx:Button label="&lt; Quitar" toolTip="Quite la causa seleccionada de la lista." horizontalCenter="0" width="84" height="30" verticalCenter="5" click="removeCausa()"/>
+		<mx:Button label="Siguiente >>" right="10" bottom="10" click="showCanv(step5);"/>
+		<mx:Button label="&lt;&lt; Anterior" right="118" bottom="10" click="hideCanv(step4);"/>s
+</mx:Canvas>

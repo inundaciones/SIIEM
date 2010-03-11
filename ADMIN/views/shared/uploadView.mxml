@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="300" height="20"
+	 backgroundColor="#FFFFFF">
+<mx:Metadata>
+	[Event(name="uploaded")]
+</mx:Metadata> 
+<mx:Script>
+	<![CDATA[
+		
+		import mx.managers.PopUpManager;
+		
+		public var ur:URLRequest;
+		
+		[Bindable]
+		private var fr:FileReference=new FileReference();
+		
+		public function Upload():void{			
+			fr.addEventListener(Event.CANCEL,cancelHandler);
+			fr.addEventListener(ProgressEvent.PROGRESS,progressHandler);
+			fr.addEventListener(Event.COMPLETE,completeHandler);
+			fr.addEventListener(Event.SELECT,startUpload);
+			fr.browse();			
+		}
+		
+		private function startUpload(event:Event):void{
+			fr.upload(ur,'userfile');
+		}
+		
+		private function cancelHandler(event:Event):void{
+			PopUpManager.removePopUp(this);
+		}
+		
+		private function progressHandler(event:ProgressEvent):void{			
+			pg.setProgress(event.bytesLoaded,event.bytesTotal);
+		}
+		
+		private function completeHandler(event:Event):void{
+			var e:Event=new Event('uploaded');
+			this.dispatchEvent(e);
+			PopUpManager.removePopUp(this);
+		}
+		
+	]]>
+</mx:Script>
+	<mx:ProgressBar horizontalCenter="0" verticalCenter="0" label="" id="pg" source="{fr}" enabled="true" height="10"/>	
+</mx:Canvas>

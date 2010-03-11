@@ -1,0 +1,187 @@
+/* CSS file */
+
+.AcordionHeaderMenu{
+	paddingLeft: 10;
+}
+.BotonMenu {
+   cornerRadius: 0;
+   highlightAlphas: 0, 0;
+   paddingLeft: 0;
+   paddingRight: 0;
+   fillAlphas: 1, 1, 1, 1;
+   fillColors: #ffffff, #ffffff, #f3f3f3, #f3f3f3;
+   color: #333333;
+   textRollOverColor: #7ac142;
+   textSelectedColor: #7ac142;
+   borderColor: #ffffff;
+   themeColor: #ffffff;
+   borderThicknessLeft: 3;
+   borderThicknessTop: 3;
+   borderThicknessBottom: 4;
+   borderThicknessRight: 3;
+}
+
+.BotonMenuSkin{
+	upSkin: Embed('assets/upMenuBtn.gif');	
+	overSkin: Embed('assets/overMenuBtn.gif');	
+	downSkin: Embed('assets/overMenuBtn.gif');	
+   borderThicknessLeft: 0;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 0;
+   borderThicknessRight: 0;
+   color: #333333;
+   textRollOverColor: #7ac142;
+   textSelectedColor: #7ac142;
+   cornerRadius: 0;
+   highlightAlphas: 0, 0;
+   paddingLeft: 0;
+   paddingRight: 0;
+   textAlign: "left";
+   themeColor: #FFFFFF;
+   icon: Embed('assets/flecha.gif');
+   fontFamily: "Verdana";
+    fontWeight: "normal";
+} 
+.PanelVerde {
+   borderColor: #3a9100;
+   borderAlpha: 1;
+   borderThicknessLeft: 0;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 0;
+   borderThicknessRight: 0;
+   cornerRadius: 0;
+   highlightAlphas: 0.24, 0.2;
+   headerColors: #6da12d, #3a9100;
+   shadowDirection: right;
+   titleStyleName: "mypanelTitle";
+}
+
+DataGrid {
+   rollOverColor: #6da12d;
+   selectionColor:  #3a9100;
+}
+
+.PanelRosa {
+   borderColor: #d31145;
+   borderAlpha: 1;
+   borderThicknessLeft: 0;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 0;
+   borderThicknessRight: 0;
+   cornerRadius: 0;
+   highlightAlphas: 0.24, 0.2;
+   headerColors: #f15d84, #d31145;
+   shadowDirection: right;
+   titleStyleName: "mypanelTitle";
+}
+.PanelGris {
+   borderColor: #676767;
+   borderAlpha: 1;
+   borderThicknessLeft: 0;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 0;
+   borderThicknessRight: 0;
+   cornerRadius: 0;
+   highlightAlphas: 0.24, 0.2;
+   headerColors: #a1a1a1, #676767;
+   shadowDirection: right;
+   titleStyleName: "mypanelTitle";
+}
+.mypanelTitle {
+   color: #ffffff;
+}
+
+.comboBoxVerde {
+   cornerRadius: 0;
+   color: #ffffff;
+   borderColor: #6da12d;
+   fillAlphas: 0.6, 0.4, 0.75, 0.83;
+   fillColors: #6da12d, #3a9100, #6da12d, #3a9100;
+   backgroundAlpha: 1;
+   selectionColor: #00cc33;
+   textSelectedColor: #60a12d;
+   useRollOver: true;
+   themeColor: #6da12d;
+   alternatingItemColors: #6da12d, #3a9100;
+}
+
+.AccordionGris {
+   borderStyle: none;
+   highlightAlphas: 0.5, 0.58;
+   fillAlphas: 0.7, 0.61, 1, 1;
+   fillColors: #a1a1a1, #676767, #676767, #a1a1a1;
+   themeColor: #676767;
+   dropShadowEnabled: false;
+   shadowDirection: right;
+}
+
+Alert {
+    titleStyleName: "alertTitle";
+    messageStyleName: "alertMessage";
+    dropShadowEnabled: true;
+    shadowDistance: 5;
+    shadowDirection: right;
+    cornerRadius: 5;
+    backgroundColor:  #3a9100;
+    color: white;
+    borderColor:  #3a9100;
+    fontColor: white;
+}
+
+.alertTitle {
+    letterSpacing: 0;
+    fontSize: 14;
+}
+
+.alertMessage {
+    letterSpacing: 0;
+    fontSize: 10;
+    fontWeight: normal;
+    color: white;
+}
+
+.alertButton {
+    letterSpacing: 0;
+    fontSize: 11;
+    cornerRadius: 10;
+    fontWeight: normal;
+    color: white;
+    skin: ClassReference(null);
+}
+
+TextInput {
+   backgroundColor: #eeeeee;
+}
+
+.textInput {
+   backgroundColor: #eeeeee;
+}
+
+
+.closeBtn {
+	upSkin:        Embed('/assets/window/closeBtn.png');
+	overSkin:      Embed('/assets/window/closeBtnOver.png');
+	downSkin:      Embed('/assets/window/closeBtnOver.png');
+	disabledSkin:  Embed('/assets/window/closeBtn.png');
+}
+
+.maxBtn {
+	upSkin:        Embed('/assets/window/minBtn.png');
+	overSkin:      Embed('/assets/window/minBtnOver.png');
+	downSkin:      Embed('/assets/window/minBtnOver.png');
+	disabledSkin:  Embed('/assets/window/minBtn.png');
+}
+
+.minBtn {
+	upSkin:        Embed('/assets/window/minBtn.png');
+	overSkin:      Embed('/assets/window/minBtnOver.png');
+	downSkin:      Embed('/assets/window/minBtnOver.png');
+	disabledSkin:  Embed('/assets/window/minBtn.png');
+}
+
+.restoreBtn {
+	upSkin:        Embed('/assets/window/restBtn.png');
+	overSkin:      Embed('/assets/window/restBtnOver.png');
+	downSkin:      Embed('/assets/window/restBtnOver.png');
+	disabledSkin:  Embed('/assets/window/restBtn.png');
+}

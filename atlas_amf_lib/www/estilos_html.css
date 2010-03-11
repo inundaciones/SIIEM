@@ -1,0 +1,56 @@
+body{
+	background: #dedede;
+	margin: 0px; 
+	overflow:hidden; 
+	background-image:url('bgBig.png');
+	
+}
+
+#flashCont{
+
+}
+
+#header{
+	width: 800px;
+	height: 60px;
+	background-image:url('header.jpg');
+	background-repeat:no-repeat;
+	position: absolute;
+	top:0;
+    right: 0;
+    left: 0;
+    margin: auto;
+}
+
+
+p{
+	font-family:      Arial, sans-serif;
+
+}
+
+#nota{
+	width: 280;
+	height: 200;
+	background-image:url('plecaRosa.gif');
+	background-repeat: repeat-x;
+	position: absolute;
+	top:75;
+	padding-top:29px;
+	padding-bottom:5px;
+	padding-right:5px;
+	padding-left:0px;
+}
+
+#gota{
+	width: 400px;
+	height: 400px;
+	background-image:url('logoCaemGris.gif');
+	background-repeat:no-repeat;
+	position: absolute;
+    top: 150;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+
+}

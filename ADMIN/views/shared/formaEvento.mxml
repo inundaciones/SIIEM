@@ -1,0 +1,795 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="780" height="428" styleName="PanelGris"
+	 showCloseButton="true" close="CloseQuestion()" creationComplete="Init();" horizontalScrollPolicy="off" 
+	 verticalScrollPolicy="off" title="Nuevo evento" xmlns:maps="com.google.maps.*" xmlns:geo="obj.geo.*">	
+	<mx:Metadata>
+		[Event(name="Ubicar", type="obj.eventCoorde")]
+	</mx:Metadata>
+	<mx:states>
+		<mx:State name="usuario">
+			<mx:RemoveChild target="{label5}"/>
+			<mx:RemoveChild target="{label6}"/>
+			<mx:RemoveChild target="{cmbMunicipio}"/>
+			<mx:RemoveChild target="{cmbCuenca}"/>
+			<mx:SetProperty target="{label8}" name="y" value="48"/>
+			<mx:SetProperty target="{label9}" name="y" value="85"/>
+			<mx:SetProperty target="{label10}" name="y" value="116"/>
+			<mx:SetProperty target="{cmbEvento}" name="y" value="115"/>
+			<mx:SetProperty target="{dtEvento}" name="y" value="84"/>
+			<mx:SetProperty target="{cmbSitio}" name="y" value="47"/>
+			<mx:SetProperty target="{cmbSitio}" name="dataProvider"/>
+		</mx:State>
+		<mx:State name="gerencia">
+			<mx:RemoveChild target="{label5}"/>
+			<mx:RemoveChild target="{cmbCuenca}"/>
+			<mx:SetProperty target="{cmbMunicipio}" name="dataProvider"/>
+		</mx:State>
+	</mx:states>
+	<mx:Metadata>
+		[Event(name="Saved")]
+	</mx:Metadata>
+	
+	<mx:XML xmlns="" id="xmlUnidades">					
+		<DATOS>
+			<UNIDAD LABEL='M2'/>
+			<UNIDAD LABEL='Km2'/>
+		</DATOS>						
+	</mx:XML>
+	<mx:XML xmlns="" id="xmlPrioridad">					
+		<DATOS>
+			<PRIORIDAD LABEL='Baja' NUM='1'/>
+			<PRIORIDAD LABEL='Media' NUM='2'/>
+			<PRIORIDAD LABEL='Alta' NUM='3'/>
+		</DATOS>						
+	</mx:XML>
+			
+	<mx:Script>
+		<![CDATA[
+			import mx.events.CloseEvent;
+			import com.google.maps.controls.MapTypeControl;
+			import com.google.maps.Map;
+			import com.google.maps.controls.ZoomControl;
+			import com.google.maps.controls.ControlPosition;
+			import com.google.maps.controls.ZoomControlOptions;
+			import com.google.maps.overlays.MarkerOptions;
+			import com.google.maps.overlays.Marker;
+			import com.google.maps.LatLng;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.effects.Move;
+			import mx.controls.DateChooser;
+			import mx.rpc.remoting.RemoteObject;
+			import mx.managers.PopUpManager;
+			import mx.managers.CursorManager
+			import mx.controls.Alert;
+			import mx.managers.CursorManagerPriority;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.collections.ArrayCollection;
+		   	import obj.CAEM.*;
+		    import obj.eventCoorde;
+		    import obj.CAEM.sitioCAEM;
+			import obj.CAEM.municipioCAEM;
+			import obj.CAEM.localidadCAEM;
+			import obj.UTMLatLon;
+		    
+		    
+		   	public var usuario:usuarioCAEM;
+		    
+		    [Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+		    
+		    	
+			[Embed(source="assets/markerIcon.png")]
+   				private var _markerIcon:Class;
+		    
+		    [Bindable]
+		    	private var causas_disponibles:Array;
+		    			    		    			   	
+		   	[Bindable]	   		   
+		    public var evento:eventoCAEM=new eventoCAEM();
+		    		    
+		    private var gotita:MovieClip= new gota();
+		    
+		    private function Init():void{		    			    	
+		    	initControls();
+		    	dtEvento.dayNames= ['D', 'L', 'M', 'M', 'J', 'V', 'S'];      
+				dtEvento.monthNames=['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo','Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre','Diciembre'];
+		    			    	
+		    	if(evento.id=='0'){
+		    		if(usuario.tipo=='A'||usuario.tipo=='T'){
+		    			loadCuencas();
+		    		}else{
+		    			if(usuario.tipo=='M'){
+		    				this.currentState='usuario';
+		    				loadSitios();
+		    			}else{
+		    				this.currentState='gerencia';
+		    				loadMunicipios();
+		    			}			    			
+		    		}	
+		    		loadEventos();
+		    	}else{
+		    		this.centrarMapa(googleMap2,parseFloat(evento.lat),parseFloat(evento.lon));
+					googleMap2.loadPoly(evento.id);
+					cmbPrioridad.selectedIndex=evento.prioridad-1;
+		    		showCanv(step1b);
+		    		loadCausas();
+		    		var index:Number=0;
+		    		var indexOk:Number=0;
+		    		
+		    		for (index=0;index<cmbUnidad.numChildren;index++){
+		    			cmbUnidad.selectedIndex=index;
+		    			if(cmbUnidad.text==evento.unidad){
+		    				indexOk=index;
+		    			}
+		    		}
+		    		
+		    		cmbUnidad.selectedIndex=indexOk;
+		    				    				    		
+		    		
+		    	}			    		    	
+		    }
+		    		 		    
+		    private function loadCuencas():void{		    	
+		    	var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='catalogosGeograficos';
+		    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.loadCuencasOtro();
+		    }
+		    		   
+		    
+		    private function loadCuencasDataListener(event:ResultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);                         
+				cmbCuenca.dataProvider=event.result as Array;
+				cmbCuenca.selectedIndex=-1;
+				cmbCuenca.text='Seleccione una cuenca';								
+			}
+		    
+		    private function loadSitios():void{		    	
+		    	var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='catalogosGeograficos';
+		    	ro.addEventListener(ResultEvent.RESULT,loadSitiosDataListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.loadSitiosOtro(usuario.id_municipio);
+		    }
+		    		   
+		    
+		    private function loadSitiosDataListener(event:ResultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);                         
+				cmbSitio.dataProvider=event.result as Array;
+				cmbSitio.selectedIndex=-1;
+				cmbSitio.text='Seleccione un sitio';								
+			}
+			
+		 	private function loadMunicipios():void{		    	
+		    	var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='catalogosGeograficos';
+		    	ro.addEventListener(ResultEvent.RESULT,loadMunicipiosDataListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.loadMunicipiosGerenciaOtro(usuario.id_gerencia);
+		    }
+		    		   
+		    
+		    private function loadMunicipiosDataListener(event:ResultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);                         
+				cmbMunicipio.dataProvider=event.result as Array;
+				cmbMunicipio.selectedIndex=-1;
+				cmbMunicipio.text='Seleccione un municipio';								
+			}	
+		    
+		    private function loadEventos():void{
+		    	var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='catalogosGenerales';
+		    	ro.addEventListener(ResultEvent.RESULT,loadEventosDataListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.loadBasic('EVENTOS');
+		    }
+		    
+		    private function loadEventosDataListener(event:ResultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);                         
+				cmbEvento.dataProvider=event.result as Array;									
+			}
+		    
+		    private function loadCausas():void{
+		    	var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='eventoController';
+		    	ro.addEventListener(ResultEvent.RESULT,loadCausasDataListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.loadCausasDisp(evento);
+		    }
+		                     						
+			private function loadCausasDataListener(event:ResultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);                         
+				causas_disponibles=event.result as Array;
+				causas_disponibles.sortOn("name",1);
+							
+			}
+		   
+			private function faultListener(event:FaultEvent):void {
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				Alert.show(event.fault.message, "Error");
+			}
+									
+			private function addCausa():void{
+				if(lstCausasD.selectedIndex>=0){
+					var ro:RemoteObject=new RemoteObject('zend');
+					var id:String=(lstCausasD.selectedItem as basicItemCAEM).id
+					ro.source='eventoController';
+					ro.addEventListener(ResultEvent.RESULT,addCausaResultHandler);
+					ro.addEventListener(FaultEvent.FAULT,faultListener);
+					CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);					
+					ro.addCausa(evento,id);	
+				}	
+			}
+			
+			private function addCausaResultHandler(event:ResultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				if(event.result==0){
+					Alert.show("Error!!");
+				}else{
+					var causa:basicItemCAEM=(lstCausasD.selectedItem as basicItemCAEM)
+					evento.causas.push(causa);
+					var i:Number=0;
+					for(i=lstCausasD.selectedIndex;i>0;i--){
+						causas_disponibles[i]=causas_disponibles[i-1];							
+					}
+					causas_disponibles.shift();
+					lstCausasS.dataProvider=evento.causas;
+					lstCausasD.dataProvider=causas_disponibles;					
+				}
+			}
+			
+			private function removeCausa():void{
+				if(lstCausasS.selectedIndex>=0){
+					var ro:RemoteObject=new RemoteObject('zend');
+					var id:String=(lstCausasS.selectedItem as basicItemCAEM).id
+					ro.source='eventoController';
+					ro.addEventListener(ResultEvent.RESULT,removeCausaResultHandler);
+					ro.addEventListener(FaultEvent.FAULT,faultListener);
+					CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);					
+					ro.removeCausa(evento,id);	
+				}				
+			}
+			
+			private function removeCausaResultHandler(event:ResultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				if(event.result==0){
+					Alert.show("Error!!");
+				}else{
+					var causa:basicItemCAEM=(lstCausasS.selectedItem as basicItemCAEM)
+					causas_disponibles.push(causa);
+					var i:Number=0;
+					for(i=lstCausasS.selectedIndex;i>0;i--){
+						evento.causas[i]=evento.causas[i-1];							
+					}
+					evento.causas.shift();
+					lstCausasS.dataProvider=evento.causas;
+					lstCausasD.dataProvider=causas_disponibles;					
+				}
+			}
+			
+			private function addAccion():void{
+				var ae:addAccionEvento=addAccionEvento(PopUpManager.createPopUp(this,addAccionEvento,true));
+				ae.evento=evento;				
+				ae.dg=dgAcciones;
+				ae.usuario=this.usuario;
+				ae.TIPO2='A';
+				PopUpManager.centerPopUp(ae);
+			}
+			
+			private function addObra():void{
+				var ae:addAccionEvento=addAccionEvento(PopUpManager.createPopUp(this,addAccionEvento,true));
+				ae.evento=evento;				
+				ae.dg=dgAcciones;
+				ae.usuario=this.usuario;
+				ae.TIPO2='O';
+				PopUpManager.centerPopUp(ae);
+			}
+			
+			private function removeItem():void{
+				if(dgAcciones.selectedIndex>=0){
+					var accion:accionEventoCAEM=dgAcciones.selectedItem as accionEventoCAEM;
+					var ro:RemoteObject=new RemoteObject('zend');
+					ro.source='eventoController';
+					ro.addEventListener(ResultEvent.RESULT,removeItemResultListener);
+					ro.addEventListener(FaultEvent.FAULT,faultListener);
+					CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+					ro.removeAccion(evento,accion);	
+				}
+			}
+			
+			private function removeItemResultListener(event:ResultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				
+				for(var i:Number=dgAcciones.selectedIndex;i>0;i--){
+					evento.acciones[i]=evento.acciones[i-1];
+				}
+				evento.acciones.shift();
+				dgAcciones.dataProvider=evento.acciones;				
+			}
+			
+			private function addObservacion():void{
+				var ao:addObservacionEvento=addObservacionEvento(PopUpManager.createPopUp(this,addObservacionEvento,true));
+				ao.evento=evento;
+				ao.dg=dgObservaciones;
+				PopUpManager.centerPopUp(ao);
+			}
+			
+			private function removeObservacion():void{
+				if(dgObservaciones.selectedIndex>-1){
+					var ro:RemoteObject=new RemoteObject('zend');
+					ro.source='eventoController';
+					ro.addEventListener(ResultEvent.RESULT,removeObservacionListener);
+					ro.addEventListener(FaultEvent.FAULT,faultListener);
+					CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+					ro.removeObservacion(evento,dgObservaciones.selectedItem as String);
+				}	
+			}
+			
+			private function removeObservacionListener(event:ResultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);				
+				for(var i:Number=dgObservaciones.selectedIndex;i>0;i--){
+					evento.observaciones[i]=evento.observaciones[i-1];
+				}
+				evento.observaciones.shift();
+				dgObservaciones.dataProvider=evento.observaciones;
+			}
+		
+			private function saveEvento():void{												
+				evento.descripcion=txtDescripcion.text;
+				evento.colonia=txtColonia.text;				
+				evento.L_N=txtNorte.text;
+				evento.L_S=txtSur.text;
+				evento.L_O=txtOriente.text;
+				evento.L_P=txtPoniente.text;
+				evento.superficie=txtSuperficie.text;
+				evento.unidad=cmbUnidad.text;
+				evento.poblacion=txtPoblacion.text;
+				evento.casa=txtCasa.text;
+				evento.local=txtLocal.text;
+				evento.industria=txtIndustria.text;
+				evento.otros=txtOtros.text;
+				evento.publico=txtPublico.text;
+				evento.t_vial=txtVial.text;
+				evento.t_interior=txtInterior.text;
+				evento.prioridad=parseInt((cmbPrioridad.selectedItem as XML).@NUM);												
+		    	var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='eventoController';		    	
+		    	ro.addEventListener(ResultEvent.RESULT,saveEventoDataListener);		    		
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	
+			    CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.save(evento);
+		    				    
+			}
+			
+			private function saveEventoDataListener(event:ResultEvent):void{				
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				var e:Event=new Event('Saved');
+				this.dispatchEvent(e);
+				PopUpManager.removePopUp(this);
+								
+			}
+			
+			private function showCanv(c:Canvas):void{
+				var m:Move=new Move(c);
+				m.xFrom=800;
+				m.xTo=0;
+				m.duration=300;
+				m.play();
+			}
+			
+			////Para regresar los canvas///////////
+			
+			private function hideCanv(c:Canvas):void{
+				var m:Move=new Move(c);
+				m.xFrom=c.x;
+				m.xTo=800;
+				m.duration=300;
+				m.play();
+			}
+			
+			
+			
+			private function getEvento():void{
+				if((cmbSitio.selectedItem as sitioCAEM)!=null){
+					if((cmbSitio.selectedItem as sitioCAEM).id_sitio=='0'){
+						var frs:formaRequestSitio=formaRequestSitio(PopUpManager.createPopUp(this,formaRequestSitio,true));
+						frs.addEventListener('Saved',frsHandler);
+						PopUpManager.centerPopUp(frs);	
+					}else{
+						if(dtEvento.selectedDate!=null)
+						{
+							var dt:Date=dtEvento.selectedDate;
+							
+							evento.fecha=dt.getFullYear().toString()+"-"+dt.month.toString()+"-"+dt.date.toString()
+							evento.id_evento=(cmbEvento.selectedItem as basicItemCAEM).id;
+							evento.id_sitio=(cmbSitio.selectedItem as sitioCAEM).id_sitio;
+							evento.uri_user=usuario.uri_user;
+							
+							var ro:RemoteObject=new RemoteObject('zend');
+							ro.source='eventoController';
+							ro.addEventListener(ResultEvent.RESULT,getEventoResultHandler);
+							ro.addEventListener(FaultEvent.FAULT,faultListener);
+							CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+							ro.getEvento(evento);	
+						}else
+						{
+					        Alert.show("Por favor ingrese la fecha en que ocurrió el evento","Faltan datos");
+						}
+					}
+				}else{
+					Alert.show("Por favor seleccione un sitio","Faltan datos");
+				}					
+			}
+			
+			private function frsHandler(event:Event):void{				
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function getEventoResultHandler(event:ResultEvent):void{
+				var e:eventoCAEM=event.result as eventoCAEM;				
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				if(e.id=='0'){					
+					var ro:RemoteObject=new RemoteObject('zend');
+					ro.source='eventoController';
+					ro.addEventListener(ResultEvent.RESULT,createEventoResultHandler);
+					ro.addEventListener(FaultEvent.FAULT,faultListener);
+					CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+					ro.createEvento(evento);
+				}else{
+					evento=e;
+					loadCausas();
+					this.centrarMapa(googleMap2,parseFloat(evento.lat),parseFloat(evento.lon));
+					googleMap2.loadPoly(evento.id);
+					cmbPrioridad.selectedIndex=e.prioridad-1;					
+					showCanv(step1b);
+				}				
+			}
+			
+			private function createEventoResultHandler(event:ResultEvent):void{
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+				loadCausas();
+				evento=event.result as eventoCAEM;
+				evento.files=new Array();
+				evento.acciones=new Array();
+				evento.observaciones=new Array();
+				evento.causas=new Array();
+				this.centrarMapa(googleMap2,parseFloat(evento.lat),parseFloat(evento.lon));
+				googleMap2.loadPoly(evento.id);				
+				showCanv(step1b);
+			}
+						
+		
+			private function sitioLabel(o:Object):String{
+				var s:String='';
+				
+				s=(o as sitioCAEM).clave+'-'+(o as sitioCAEM).name;
+				
+				return s;
+			}
+			
+			private function tipoAccion1(o: Object, dgc:DataGridColumn):String{
+				var s:String='';
+				if(o is accionEventoCAEM){	
+					if(o.tipo=='E')
+						s='Emergente';
+					if(o.tipo=='P')
+						s='Preventiva';
+					if(o.tipo=='D')
+						s='Solución definitiva';		
+				}
+				return s;
+			}
+			
+			private function tipoAccion2(o: Object, dgc:DataGridColumn):String{
+				var s:String='';
+				if(o is accionEventoCAEM){
+					if(o.tipo2=='O')
+						s='Obra';
+					if(o.tipo2=='A')
+						s='Accion';
+				}		
+				return s;
+			}
+			
+			private function showSitio():void{
+				if(cmbSitio.selectedItem!=null){
+			 		if((cmbSitio.selectedItem as sitioCAEM).lat!=null){
+			 			var sit:sitioCAEM=cmbSitio.selectedItem as sitioCAEM;
+						var e:eventCoorde=new eventCoorde('Ubicar',sit.lat,sit.lon,sit.clave+"-"+sit.name+"\n"+ sit.txt_municipio);						
+						centrarMapa(googleMap,parseFloat((cmbSitio.selectedItem as sitioCAEM).lat),parseFloat((cmbSitio.selectedItem as sitioCAEM).lon));
+			 			this.dispatchEvent(e);
+			 		}	
+				}		
+			}
+			
+			
+			public function centrarMapa(mapa:Mapa, x:Number,y:Number):void{
+				
+				var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);
+				ull.UTMx=x;
+				ull.UTMy=y;
+				ull.UTMToLatLon();
+				var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+				mapa.setCenter(ll);
+			
+				var mo:MarkerOptions=new MarkerOptions();								
+				mo.icon=new _markerIcon();
+				
+				var marker:Marker = new Marker(ll,mo);
+			   	mapa.addOverlay(marker);
+			
+				mapa.setZoom(15,true);				
+				mapa.visible=true;								
+			}
+			private function initControls():void{
+				//OPCIONES Y CONTROL ZOOM
+				var zco:ZoomControlOptions=new ZoomControlOptions();
+				zco.position=new ControlPosition(ControlPosition.ANCHOR_TOP_RIGHT,10,40);				
+				var zC:ZoomControl=new ZoomControl(zco);				
+				googleMap.addControl(zC);				
+				googleMap.addControl(new MapTypeControl);
+			}
+			
+			private function newPolyHandler():void{
+				if(googleMap2.pintando){
+					newPolyBtn.label='Dibujar inundación';
+					cancelPolyBtn.visible=false;
+					googleMap2.savePoly(evento.id);
+				}else{
+					newPolyBtn.label='Guardar poligono';
+					cancelPolyBtn.visible=true;
+					googleMap2.newPoly();
+				}				
+			}
+			
+			private function cancelPolyHandler():void{
+				newPolyBtn.label='Dibujar inundación';
+				cancelPolyBtn.visible=false;
+				googleMap2.cancelPoly();
+			}
+			
+			private function s2Handler():void{
+				if(googleMap2.pintando){
+					Alert.yesLabel="Sí";
+					Alert.noLabel="No";
+					Alert.cancelLabel="Cancelar";
+					Alert.buttonWidth=120;
+					Alert.show("Desea guardar la inundación antes de continuar?","Alerta", mx.controls.Alert.YES | mx.controls.Alert.NO | mx.controls.Alert.CANCEL,this, askPolyHandler);										
+				}else{
+					showCanv(step2);
+				}	
+			}
+			
+			private function askPolyHandler(event:CloseEvent):void{
+				if(event.detail==Alert.YES){
+					googleMap2.savePoly(evento.id);
+					newPolyBtn.label='Dibujar inundación';
+					cancelPolyBtn.visible=false;
+					showCanv(step2);
+					
+				}else{
+					if(event.detail==Alert.NO){
+						googleMap2.cancelPoly();
+						newPolyBtn.label='Dibujar inundación';
+						cancelPolyBtn.visible=false;
+						showCanv(step2);
+					}
+				}
+			}
+			
+			private function CloseQuestion():void{
+					Alert.yesLabel="Sí";
+					Alert.noLabel="No";
+					Alert.cancelLabel="Cancelar";	
+					Alert.buttonWidth=120;			
+					Alert.show("Desea guardar el evento antes de cerrar la ventana?","Alerta", mx.controls.Alert.YES | mx.controls.Alert.NO | mx.controls.Alert.CANCEL,this, askCloseHandler);										
+								
+			}
+			
+			private function askCloseHandler(event:CloseEvent):void{
+				if(event.detail==Alert.YES){
+					saveEvento();
+					if(googleMap2.pintando){
+						googleMap2.savePoly(evento.id);
+					}
+				}else{
+					if(event.detail==Alert.NO){
+						PopUpManager.removePopUp(this);
+					}
+				}
+			}
+			
+			private function previewFunction(o:Object,dc:DataGridColumn):String{
+				var s:String='';				
+				if(o.data2=='JPG'||o.data2=='PNG'||o.data2=='BMP'||o.data2=='GIF'){
+					s=(this.parentApplication as admin_atlas).preURL+'files/preview.php?URI_FILE='+o.data1+'&WIDTH=100&HEIGHT=100';
+				}else{
+					s=(this.parentApplication as admin_atlas).preURL+'icons/'+String(o.data2).toLowerCase()+'.png';
+				}								
+				return s;
+			}
+			
+			private function download():void{
+				if(dgFiles.selectedIndex>-1){
+					var ur:URLRequest=new URLRequest((this.parentApplication as admin_atlas).preURL+'files/download.php');
+					var vars:URLVariables=new URLVariables();
+					vars.URI_FILE=(dgFiles.selectedItem as basicItemCAEM).data1;
+					ur.data=vars;
+					ur.method='POST';
+					
+					var dv:downloadView=downloadView(PopUpManager.createPopUp(this,downloadView,true));
+					dv.ur=ur;
+					dv.indet=false;
+					dv.fName=(dgFiles.selectedItem as basicItemCAEM).name;
+					dv.bTotal=parseInt((dgFiles.selectedItem as basicItemCAEM).data3);
+					PopUpManager.centerPopUp(dv);
+					dv.Download();
+				}
+			}
+			
+			private function upload():void{				
+				var uv:uploadView=uploadView(PopUpManager.createPopUp(this,uploadView,true));
+				var ur:URLRequest=new URLRequest((this.parentApplication as admin_atlas)+'files/upload.php');
+				
+				var vars:URLVariables=new URLVariables();
+				vars.ID_EVENTO=evento.id;
+				ur.method='POST';
+				ur.data=vars;				
+				uv.ur=ur;
+				uv.addEventListener('uploaded',uploadEndHandler);
+				PopUpManager.centerPopUp(uv);
+				uv.Upload();				
+			}
+			
+			private function uploadEndHandler(event:Event):void{
+				var ro:RemoteObject=new RemoteObject('zend');
+		    	ro.source='eventoController';
+		    	ro.addEventListener(ResultEvent.RESULT,loadFilesDataListener);
+		    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+		    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+		    	ro.loadFiles(evento);
+			}
+			
+			private function loadFilesDataListener(event:ResultEvent):void{
+				evento.files=event.result as Array;
+				dgFiles.dataProvider=evento.files;
+				CursorManager.removeCursor(CursorManager.currentCursorID);
+			}
+			
+		]]>
+	</mx:Script>	
+	<mx:Canvas x="0" y="0" width="100%" height="395" id="step1" backgroundColor="#FFFFFF">
+		<mx:Label x="10" y="10" text="Cuenca" color="#000000" fontSize="11" styleName="etiquetas" id="label5"/>
+		<mx:Label x="10" y="44" text="Municipio" color="#000000" fontSize="11" styleName="etiquetas" id="label6"/>
+		<mx:Label x="10" y="74" text="Sitio" color="#000000" fontSize="11" styleName="etiquetas" id="label8"/>
+		<mx:Label x="10" y="111" text="Fecha del Evento" color="#000000" fontSize="11" styleName="etiquetas" id="label9"/>
+		<mx:ComboBox x="120" y="9" labelField="name" width="225" id="cmbCuenca" change="cmbMunicipio.selectedIndex=-1;cmbMunicipio.text='Seleccione un municipio';cmbSitio.selectedIndex=-1;cmbSitio.text='Seleccione un sitio';" itemRenderer="mx.controls.Label"/>
+		<mx:ComboBox x="120" y="43" labelField="name" id="cmbMunicipio" dataProvider="{(cmbCuenca.selectedItem as cuencaCAEM).municipios}" width="225" change="cmbSitio.selectedIndex=-1;cmbSitio.text='Seleccione un sitio';" itemRenderer="mx.controls.Label"/>
+		<mx:ComboBox x="120" y="73" width="225" id="cmbSitio" dataProvider="{(cmbMunicipio.selectedItem as municipioCAEM).sitios}"
+			 labelFunction="sitioLabel" change="showSitio();" itemRenderer="mx.controls.Label"/>
+		<mx:DateField x="120" y="110" id="dtEvento" width="128"  showToday="true" enabled="true"/>
+		<mx:Label x="10" y="139" text="Evento:" color="#000000" fontSize="11" styleName="etiquetas" id="label10"/>
+		<mx:ComboBox x="120" y="138" id="cmbEvento" labelField="name" width="225"/>
+		<!--<maps:Map id="googleMap" width="411" height="373" x="387" y="10" key="ABQIAAAAltyW0IXKxgyIZiznmfD1YxSJDlMMpPL5bybJ1mM_fUgnaKLDohTJMEqVM8JpI9eYtUYRU7FtmP4qEA"/>-->				
+		<geo:Mapa id="googleMap" width="417" height="385" x="353" y="9" key="ABQIAAAAltyW0IXKxgyIZiznmfD1YxRRYEiY5W53UzZqN_1nV7KPQsxs1hSy9x6aMAHEi6sxN46AHryu3MNQFg"/>
+		<mx:Button label="Siguiente >>" right="435" bottom="10" click="getEvento();btnSiguienteStep1.enabled=false" id="btnSiguienteStep1"/>
+	</mx:Canvas>
+	<mx:Canvas x="800" y="0" width="100%" height="395" id="step1b" backgroundColor="#FFFFFF">
+		<geo:Mapa id="googleMap2" width="760.90906" height="346.4394" x="9.1" y="9" key="ABQIAAAAltyW0IXKxgyIZiznmfD1YxRRYEiY5W53UzZqN_1nV7KPQsxs1hSy9x6aMAHEi6sxN46AHryu3MNQFg"/>
+		<mx:Button x="9" y="363" label="Dibujar inundación" width="136.74243" height="22.045454" id="newPolyBtn" click="newPolyHandler()"/>
+		<mx:Button x="153.25" y="363.85" label="Cancelar" width="136.74243" height="22.045454" id="cancelPolyBtn" click="cancelPolyHandler()" visible="false"/>
+		<mx:Button label="Siguiente >>" right="9.150024" bottom="9.149994" click="s2Handler();"/>
+	</mx:Canvas>
+	<mx:Canvas x="800" y="0" width="100%" height="395" id="step2" backgroundColor="#FFFFFF" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:Label x="9.1" y="10.1" text="Descripción" color="#000000" fontSize="11"/>
+		<mx:Label x="10" y="89.1" text="Colonia(s) y/o barrio(s)" color="#000000" fontSize="11"/>
+		<mx:Label x="10" y="134.1" text="Delimitación del área (calles) " color="#000000" fontSize="11"/>
+		<mx:Label x="10" y="161.1" text="Al norte" color="#000000" fontSize="11"/>
+		<mx:Label x="10" y="192.1" text="Al sur" color="#000000" fontSize="11"/>
+		<mx:Label x="10" y="223.1" text="Al oriente" color="#000000" fontSize="11"/>
+		<mx:Label x="10" y="251.1" text="Al poniente" color="#000000" fontSize="11"/>
+		<mx:TextArea x="118.1" y="9.1" id="txtDescripcion" width="491.9" height="58"  wordWrap="true" editable="true" text="{evento.descripcion}" styleName="textInput" />
+		<mx:TextArea x="168.1" y="89.1" id="txtColonia" width="441.9" height="37" text="{evento.colonia}" styleName="textInput" />
+		<mx:TextInput x="100" y="161.1" id="txtNorte" width="320" text="{evento.L_N}"/>
+		<mx:TextInput x="100" y="192.1" id="txtSur" width="320" text="{evento.L_S}"/>
+		<mx:TextInput x="100" y="223.1" id="txtOriente" width="320" text="{evento.L_O}"/>
+		<mx:TextInput x="100" y="253.1" id="txtPoniente" width="320" text="{evento.L_P}"/>
+		<mx:Button label="Siguiente >>" right="10" bottom="10" click="showCanv(step3);"/>
+		<mx:Button label="&lt;&lt; Anterior" right="118" bottom="10" click="hideCanv(step2);"/>
+	</mx:Canvas>
+	<mx:Canvas x="800" y="0" width="100%" height="395" id="step3" backgroundColor="#FFFFFF" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:Label x="10" y="11" text="Superficie afectada" color="#000000" fontSize="11" styleName="etiquetas" fontWeight="bold"/>
+		<mx:Label x="311" y="39" text="Prioridad de antención" color="#000000" fontSize="11" styleName="etiquetas" fontWeight="bold"/>
+		<mx:Label x="10" y="79" text="Inmuebles afectados" color="#000000" fontSize="11" styleName="etiquetas" fontWeight="bold"/>
+		<mx:Label x="41" y="108" text="Casa habitación" color="#000000" fontSize="11" styleName="etiquetas"/>
+		<mx:Label x="81" y="136" text="Industria" color="#000000" fontSize="11" id="label3" styleName="etiquetas"/>
+		<mx:Label x="276" y="138" text="Otros" color="#000000" fontSize="11" styleName="etiquetas"/>
+		<mx:Label x="405" y="108" text="Edificio público" color="#000000" fontSize="11" styleName="etiquetas"/>
+		<mx:Label x="219" y="108" text="Local comercial" color="#000000" fontSize="11" id="label2" styleName="etiquetas"/>
+		<mx:Label x="10" y="39" text="Población (hab.)" color="#000000" fontSize="11" styleName="etiquetas" fontWeight="bold"/>
+		<mx:Label x="110" y="195" text="Vial" color="#000000" fontSize="11" styleName="etiquetas"/>
+		<mx:Label x="264" y="196" text="Interior" color="#000000" fontSize="11" styleName="etiquetas"/>
+		<mx:Label x="10" y="167" text="Tirante(s) (m.)" color="#000000" fontSize="11" id="label4" styleName="etiquetas" fontWeight="bold"/>
+		<mx:TextInput x="150" y="10" id="txtSuperficie" width="153" text="{evento.superficie}" restrict="0123456789."/>
+		<mx:TextInput x="150" y="38" id="txtPoblacion" width="153" text="{evento.poblacion}" restrict="0123456789."/>
+		<mx:TextInput x="145" y="107" id="txtCasa" width="51" text="{evento.casa}" restrict="0123456789."/>
+		<mx:TextInput x="320" y="107" id="txtLocal" width="51" text="{evento.local}" restrict="0123456789."/>
+		<mx:TextInput x="502" y="107" id="txtPublico" width="50" text="{evento.publico}" restrict="0123456789."/>
+		<mx:TextInput x="145" y="135" id="txtIndustria" width="50" text="{evento.industria}" restrict="0123456789."/>
+		<mx:TextInput x="320" y="137" id="txtOtros" width="51" text="{evento.otros}" restrict="0123456789."/>
+		<mx:TextInput x="144" y="194" id="txtVial" width="51" text="{evento.t_vial}" restrict="0123456789."/>
+		<mx:TextInput x="320" y="195" id="txtInterior" width="51" text="{evento.t_interior}" restrict="0123456789."/>
+		<mx:ComboBox x="470" y="10" width="101" id="cmbUnidad" labelField="@LABEL" text="{evento.unidad}" dataProvider="{xmlUnidades..UNIDAD}"/>
+		<mx:ComboBox x="470" y="38" width="101" id="cmbPrioridad" labelField="@LABEL" dataProvider="{xmlPrioridad..PRIORIDAD}"/>
+		<mx:Button label="Siguiente >>" right="10" bottom="10" click="showCanv(step4);" />
+		<mx:Button label="&lt;&lt; Anterior" right="118" bottom="10" click="hideCanv(step3);"/>
+			
+	</mx:Canvas>
+	<mx:Canvas x="800" y="0" width="100%" height="395" id="step4" backgroundColor="#FFFFFF" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:Label x="10" y="12" text="Seleccione las causas de la problemática" fontSize="11" fontWeight="bold"/>
+		<mx:Label x="10" y="30" text="Catálogo de probables causas de un evento." fontSize="11" fontWeight="normal"/>
+		<mx:Label x="359" y="30" text="Lista de causa que provocaron el evento." fontSize="11" fontWeight="normal"/>
+		<mx:List height="310" left="10" width="320" top="50" id="lstCausasD" dataProvider="{causas_disponibles}" labelField="name" showDataTips="true" dataTipField="name" />
+		<mx:List height="310" right="10" width="320" top="50" id="lstCausasS" dataProvider="{evento.causas}" labelField="name" showDataTips="true" dataTipField="name" />
+		<mx:Button label="Añadir &gt;" toolTip="Añade la causa seleccionada en la lista." horizontalCenter="0" width="84" height="30" verticalCenter="-30" click="addCausa()"/>
+		<mx:Button label="&lt; Quitar" toolTip="Quite la causa seleccionada de la lista." horizontalCenter="0" width="84" height="30" verticalCenter="5" click="removeCausa()"/>
+		<mx:Button label="Siguiente >>" right="10" bottom="10" click="showCanv(step5);"/>
+		<mx:Button label="&lt;&lt; Anterior" right="118" bottom="10" click="hideCanv(step4);"/>
+	</mx:Canvas>
+	<mx:Canvas x="800" y="0" width="100%" height="395" id="step5" backgroundColor="#FFFFFF" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:Text x="10" y="10" text="Lista de las medidas emprendidas relacionas con el evento en cuestión. &#xa;Para añadir una obra o acción a la lista use los botones señalados abajo.&#xa;Las medidas pueden ser obra o acción (categoría), y en ambos casos de tipo emergente, prevetiva o definitiva.&#xa;&#xa;" width="760" height="64"/>
+		<mx:DataGrid y="82" height="245" fontWeight="normal" color="#000000" borderColor="#9D9D9D" borderStyle="solid" 
+			fontSize="11" left="10" right="10" dataProvider="{evento.acciones}" id="dgAcciones">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Descripción" dataField="txt_accion" showDataTips="true"/>
+				<mx:DataGridColumn headerText="Dependencia ejecutora" dataField="txt_dependencia" width="165" showDataTips="true"/>
+				<mx:DataGridColumn headerText="Costo aproximado" dataField="costo" showDataTips="true"/>
+				<mx:DataGridColumn headerText="Tipo" dataField="Tipo" width="80" showDataTips="true" labelFunction="tipoAccion1"/>
+				<mx:DataGridColumn headerText="Categoría" dataField="Categoría" width="80" showDataTips="true" labelFunction="tipoAccion2"/>
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:Button label="- Eliminar seleccion" fontWeight="normal" click="removeItem()" left="637" top="333"/>
+		<mx:Button label="+ Añadir acción" fontWeight="normal" click="addAccion()" right="368" top="333"/>
+		<mx:Button label="+ Añadir obra" fontWeight="normal" click="addObra()" right="368" top="363" width="111"/>
+		<mx:Label x="10" y="335" text="Para añadir una acción realizada o contemplada:"/>
+		<mx:Label x="10" y="365" text="Para reportar una obra realizada o comtemplada:"/>
+		<mx:Button label="Siguiente >>" right="10" bottom="10" click="showCanv(step6);"/>
+		<mx:Button label="&lt;&lt; Anterior" right="118" bottom="10" click="hideCanv(step5);"/>
+
+	</mx:Canvas>
+	<mx:Canvas x="800" y="0" width="100%" height="395" id="step6" backgroundColor="#FFFFFF" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		<mx:DataGrid y="9.9" height="315.5303" fontWeight="normal" color="#000000" borderColor="#9D9D9D" borderStyle="solid"
+			 fontSize="11" left="10" right="423.63635" id="dgObservaciones" dataProvider="{evento.observaciones}"
+			  variableRowHeight="true" wordWrap="true">
+			<mx:columns>
+				<mx:DataGridColumn headerText="Observaciones" wordWrap="true"/>				
+			</mx:columns>
+		</mx:DataGrid>
+		<mx:Button label="- Eliminar observación" fontWeight="normal" 
+			click="removeObservacion()" right="574.2197" bottom="40.00453" width="143.0303" height="22.045454"/>
+		<mx:Button label="+ Añadir observación" fontWeight="normal" 
+			click="addObservacion()" right="423.7" bottom="40.049988"/>
+		<mx:DataGrid  dataProvider="{evento.files}" id="dgFiles" rowHeight="100" y="9.85" height="318.18182" width="400" right="10">
+		<mx:columns>
+			<mx:DataGridColumn headerText="Vista previa" itemRenderer="mx.controls.Image" labelFunction="previewFunction" width="100" textAlign="center"/>
+			<mx:DataGridColumn headerText="Nombre" dataField="name"/>
+			<mx:DataGridColumn headerText="Tipo" dataField="data2"/>			
+			<mx:DataGridColumn headerText="Tamaño" dataField="data3"/>			
+		</mx:columns>
+		</mx:DataGrid>
+		<mx:Button label="Descargar archivo" right="160.5697" bottom="40.05455" click="download();" width="143.0303" height="22.045454"/>
+		<mx:Button label="Adjuntar archivo" right="10" bottom="40" click="upload();" width="142.95454" height="22.045454"/>	
+			
+		<mx:Button label="&lt;&lt; Anterior" right="118" bottom="10" click="hideCanv(step6);"/>
+		<mx:Button label="Terminar" right="10" bottom="10" click="saveEvento();"/>	
+	</mx:Canvas>
+	
+</mx:TitleWindow>

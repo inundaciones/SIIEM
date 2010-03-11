@@ -1,0 +1,59 @@
+Application {
+   backgroundColor: #000000;
+   backgroundGradientColors: #000000, #000000;
+}
+Button {
+   highlightAlphas: 1, 0.33;
+   fillAlphas: 1, 0.16, 0.18, 1;
+   fillColors: #5f89b9, #697182, #ffffff, #eeeeee;
+}
+Panel {
+	headerHeight: 26;
+	roundedBottomCorners: true;
+	borderThicknessTop: 0;
+	borderThicknessBottom: 3;
+	borderThicknessLeft: 3;
+	borderThicknessRight: 3;
+	borderAlpha: 1.0;
+	titleStyleName: "mypanelTitle";
+}
+.mypanelTitle {
+	fontFamily: Arial;
+	fontSize: 10;
+	fontWeight: bold;
+}
+.closeBtn {
+	upSkin:        Embed('/images/window/closeButton.png');
+	overSkin:      Embed('/images/window/closeButton.png');
+	downSkin:      Embed('/images/window/closeButton.png');
+	disabledSkin:  Embed('/images/window/closeButton.png');
+}
+.increaseBtn {
+	upSkin:        Embed('/images/window/increaseButton.png');
+	overSkin:      Embed('/images/window/increaseButton.png');
+	downSkin:      Embed('/images/window/increaseButton.png');
+	disabledSkin:  Embed('/images/window/increaseButton.png');
+}
+.decreaseBtn {
+	upSkin:        Embed('/images/window/decreaseButton.png');
+	overSkin:      Embed('/images/window/decreaseButton.png');
+	downSkin:      Embed('/images/window/decreaseButton.png');
+	disabledSkin:  Embed('/images/window/decreaseButton.png');
+}
+.resizeHndlr {
+	upSkin:        Embed('/images/window/resizeHandler.png');
+	overSkin:      Embed('/images/window/resizeHandler.png');
+	downSkin:      Embed('/images/window/resizeHandler.png');
+	disabledSkin:  Embed('/images/window/resizeHandler.png');
+}
+
+
+	 	global {
+
+            modalTransparencyBlur: 5;
+            modalTransparency: 0.95;
+            modalTransparencyColor: #000000;
+            modalTransparencyDuration: 500;
+
+        }
+

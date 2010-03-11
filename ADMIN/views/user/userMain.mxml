@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" xmlns:admin="views.admin.*" 
+	xmlns:ns1="views.shared.*" xmlns:items="obj.items.*" xmlns:obj="obj.*">
+<mx:Style source="estilos.css"/>
+<mx:Script>
+	<![CDATA[
+		import obj.UTMLatLon;
+		import com.google.maps.LatLngBounds;
+		import com.google.maps.LatLng;
+		import obj.CAEM.sitioCAEM;
+		import obj.CAEM.cuencaCAEM;
+		import obj.CAEM.municipioCAEM;
+		import obj.CAEM.usuarioCAEM;
+		import views.shared.formaEvento;
+		import obj.eventCoorde;
+		import mx.managers.PopUpManager;
+		import mx.managers.CursorManager;
+		import mx.managers.CursorManagerPriority;
+		import mx.rpc.events.ResultEvent;
+		import mx.rpc.events.FaultEvent;
+		import mx.rpc.remoting.RemoteObject;
+		import mx.controls.Alert;
+		
+		[Embed(source="assets/cursor.swf")]
+			private var cursorCAEM:Class;
+		
+		[Bindable]
+			public var usuario:usuarioCAEM;
+				
+		[Bindable]
+			public var sitios:Array=new Array();
+		
+		private function Init():void{
+			if(usuario.tipo=='A'||usuario.tipo=='T'||usuario.tipo=='O'){
+				if(usuario.tipo=='O'){
+					AEBTN.visible=false;
+				}
+    			loadCuencas();
+    		}else{
+    			if(usuario.tipo=='M'){    				
+    				loadSitios();
+    			}else{    				
+    				loadMunicipios();
+    			}			    			
+    		}					
+		}
+		
+		
+		
+		///////////
+		 private function loadCuencas():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadCuencasDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadCuencas();
+	    }
+	    		   
+	    
+	    private function loadCuencasDataListener(event:ResultEvent):void {	    	
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			for each(var cuenca:cuencaCAEM in event.result as Array){
+				for each(var m:municipioCAEM in cuenca.municipios){
+					for each(var s:sitioCAEM in m.sitios){
+						sitios.push(s);																																
+					}
+				}
+			}	
+			pintaSitios();						
+		}
+	    
+	    private function loadSitios():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadSitiosDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadSitios(usuario.id_municipio);
+	    }
+	    		   
+	    
+	    private function loadSitiosDataListener(event:ResultEvent):void {	    	
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			sitios=event.result as Array;
+			pintaSitios();								
+		}
+		
+	 	private function loadMunicipios():void{		    	
+	    	var ro:RemoteObject=new RemoteObject('zend');
+	    	ro.source='catalogosGeograficos';
+	    	ro.addEventListener(ResultEvent.RESULT,loadMunicipiosDataListener);
+	    	ro.addEventListener(FaultEvent.FAULT,faultListener);
+	    	CursorManager.setCursor(cursorCAEM,CursorManagerPriority.HIGH);
+	    	ro.loadMunicipiosGerencia(usuario.id_gerencia);
+	    }
+	    		   
+	    
+	    private function loadMunicipiosDataListener(event:ResultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);                         
+			for each(var m:municipioCAEM in event.result as Array){
+				for each(var s:sitioCAEM in m.sitios){
+					sitios.push(s);
+				}
+			}					
+			pintaSitios();			
+		}
+		
+		private function faultListener(event:FaultEvent):void {
+			CursorManager.removeCursor(CursorManager.currentCursorID);
+			Alert.show(event.fault.message, "Error");
+		}
+		
+		private function pintaSitios():void{
+			var zoom:Number=0;			
+			var ull:UTMLatLon=new UTMLatLon(6378137,6356752.3141);				    	
+	    	var llb:LatLngBounds=new LatLngBounds();
+	    	var centro:LatLng;
+	    	for each(var s:sitioCAEM in sitios){
+	    		if(s!=null){
+		    		var m:municipioCAEM=new municipioCAEM();
+		    		ull.UTMx=parseFloat(s.lat);
+					ull.UTMy=parseFloat(s.lon);
+					ull.UTMToLatLon();					
+					var ll:LatLng=new LatLng(ull.Lat,ull.Lon);
+		    		llb.extend(ll);		   				
+		    		m.id_municipio=s.id_municipio;
+		    		m.name=s.txt_municipio;
+		    		elMapa.marcar(s,m);		    							
+					
+	    		}
+	    	}
+	    								
+			zoom=elMapa.googleMap.getBoundsZoomLevel(llb);
+			centro=llb.getCenter();
+			if(centro.lat()==0||centro.lng()==0){
+				centro=new LatLng(19.32669491,-99.36859180);
+				zoom=10;
+			}
+			elMapa.centrarMapaSinGota(centro.lat() ,centro.lng(),zoom);
+	    	
+				
+		}
+							
+		///////////
+		
+		private function showDir():void{
+			
+			currentState='directorio';
+			directorio.usuario=usuario;
+			directorio.Init();
+			
+		}
+		
+		private function addEvento():void{
+			var ae:formaEvento=formaEvento(PopUpManager.createPopUp(this,formaEvento,true));
+			ae.usuario=this.usuario;	
+			ae.addEventListener("Ubicar",ubicar);
+			PopUpManager.centerPopUp(ae);
+		}
+		
+		private function ubicar(event:eventCoorde):void{			
+			elMapa.centrarMapa(event.xCoorde,event.yCoorde,event.label);
+						
+		}
+		
+				
+	]]>
+</mx:Script>
+	
+	
+	<ns1:mapContainer id="elMapa" width="100%" height="100%" mapReady="Init();" />
+	<mx:states>
+		<mx:State name="listEventosAll" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<ns1:listEventosAll x="10" y="10" id="eventosAll" Ubicar="{ubicar(event as eventCoorde)}" mapa="{elMapa.googleMap}"/>				
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Lista de eventos"/>
+		</mx:State>
+		<mx:State name="directorio" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<ns1:directorioMunicipio x="10" y="10" id="directorio"/>								
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Directorio del municipio"/>
+		</mx:State> 
+		<mx:State name="glosario" enterState="{canvas2.restoreMe(null);}" >
+			<mx:AddChild relativeTo="{canvas2}" position="lastChild">
+				<ns1:glosario x="10" y="10" width="100%">
+					
+				</ns1:glosario>
+			</mx:AddChild>
+			<mx:SetProperty target="{canvas2}" name="title" value="Glosario de términos"/>
+		</mx:State>
+	</mx:states>
+	<ns1:header id="header" width="100%" userType="{usuario.tipo}"  userName="{usuario.name}"/>
+	<mx:Panel xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		width="150" styleName="PanelVerde" x="10" y="68" title="Menú" height="144">		
+		<mx:VBox label="Eventos" width="100%" height="100%" verticalGap="5" paddingTop="5" paddingLeft="0" paddingRight="0">			
+			<mx:Button  width="100%"  label="Agregar nuevo evento" toolTip="Seleccione esta opción para añadir un nuevo evento."
+				click="addEvento()"  styleName="BotonMenuSkin" buttonMode="true"  id="AEBTN" />
+			<mx:Button  width="100%"  label="Ver eventos"  toolTip="Muestra todos los eventos que se han registrado en este municipio." 
+				click="{currentState='listEventosAll';canvas2.visible=true};eventosAll.usuario=this.usuario;eventosAll.Init();"  styleName="BotonMenuSkin" buttonMode="true"/>
+			<mx:Button  width="100%"  label="Ver directorio" toolTip="Para ver y editar el directorio telefónico del municipio." 
+				click="showDir();canvas2.visible=true;"  styleName="BotonMenuSkin" buttonMode="true"/>
+			<mx:Button  width="100%"  label="Glosario" click="{currentState='glosario';canvas2.visible=true}"  styleName="BotonMenuSkin" buttonMode="true"/>	
+		</mx:VBox>	
+	</mx:Panel>	
+	<obj:xugarWindowLite y="69" minY="69" width="620" height="320"  visible="false" id="canvas2"  backgroundColor="#F3F3F3" styleName="PanelVerde" minX="170" x="170" close_hide="hide" />
+	
+</mx:Canvas>

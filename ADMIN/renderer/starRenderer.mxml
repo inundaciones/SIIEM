@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" verticalAlign="middle" paddingLeft="5" paddingRight="5"
+	 width="40" horizontalGap="0">
+	<mx:Script>
+		<![CDATA[
+		
+		import mx.controls.Image;
+		
+		[Embed(source="assets/estrella.png")]
+        private var star:Class;
+                	
+		 override public function set data(value:Object):void {
+                        
+            super.data = value;
+			this.removeAllChildren();			
+			
+			var i:Number=0;
+			for(i=1;i<=data.prioridad;i++){
+				var img:Image=new Image();
+				img.width=10;
+				img.height=10;
+				img.source=star;
+				trace(data.prioridad);
+				this.addChild(img);
+			}	
+			
+		}
+		
+		]]>
+	</mx:Script>	
+</mx:HBox>
+

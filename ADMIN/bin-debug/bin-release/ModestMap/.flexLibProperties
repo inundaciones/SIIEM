@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flexLibProperties version="1">
+<includeClasses>
+<classEntry path="com.modestmaps.Map"/>
+<classEntry path="com.modestmaps.core.Bounds"/>
+<classEntry path="com.modestmaps.core.Coordinate"/>
+<classEntry path="com.modestmaps.core.MapExtent"/>
+<classEntry path="com.modestmaps.core.MapPosition"/>
+<classEntry path="com.modestmaps.core.Marker"/>
+<classEntry path="com.modestmaps.core.MarkerClip"/>
+<classEntry path="com.modestmaps.core.MarkerSet"/>
+<classEntry path="com.modestmaps.core.Tile"/>
+<classEntry path="com.modestmaps.core.TileGrid"/>
+<classEntry path="com.modestmaps.core.TilePaintCall"/>
+<classEntry path="com.modestmaps.events.MapEvent"/>
+<classEntry path="com.modestmaps.events.MapProviderEvent"/>
+<classEntry path="com.modestmaps.events.MarkerEvent"/>
+<classEntry path="com.modestmaps.events.ThrottledRequestErrorEvent"/>
+<classEntry path="com.modestmaps.events.ThrottledRequestEvent"/>
+<classEntry path="com.modestmaps.events.TilePaintEvent"/>
+<classEntry path="com.modestmaps.extras.Distance"/>
+<classEntry path="com.modestmaps.extras.GreatCircleOverlay"/>
+<classEntry path="com.modestmaps.extras.LineStyle"/>
+<classEntry path="com.modestmaps.extras.MapControls"/>
+<classEntry path="com.modestmaps.extras.Overlay"/>
+<classEntry path="com.modestmaps.flex.Map"/>
+<classEntry path="com.modestmaps.geo.AbstractProjection"/>
+<classEntry path="com.modestmaps.geo.IProjection"/>
+<classEntry path="com.modestmaps.geo.LinearProjection"/>
+<classEntry path="com.modestmaps.geo.Location"/>
+<classEntry path="com.modestmaps.geo.MercatorProjection"/>
+<classEntry path="com.modestmaps.geo.Transformation"/>
+<classEntry path="com.modestmaps.io.IRequest"/>
+<classEntry path="com.modestmaps.io.LoadMovieThrottledRequest"/>
+<classEntry path="com.modestmaps.io.MapProviderPaintThrottledRequest"/>
+<classEntry path="com.modestmaps.io.RequestThrottler"/>
+<classEntry path="com.modestmaps.io.ThrottledRequest"/>
+<classEntry path="com.modestmaps.io.XmlThrottledRequest"/>
+<classEntry path="com.modestmaps.mapproviders.AbstractImageBasedMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.AbstractMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.BlueMarbleMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.IMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.OpenStreetMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.VanillaMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.google.AbstractGoogleMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.google.GoogleAerialMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.google.GoogleHybridMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.google.GoogleRoadMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.microsoft.AbstractMicrosoftMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.microsoft.MicrosoftAerialMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.microsoft.MicrosoftHybridMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.microsoft.MicrosoftRoadMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.yahoo.AbstractYahooMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.yahoo.YahooAerialMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.yahoo.YahooHybridMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.yahoo.YahooOverlayMapProvider"/>
+<classEntry path="com.modestmaps.mapproviders.yahoo.YahooRoadMapProvider"/>
+<classEntry path="com.modestmaps.util.BinaryUtil"/>
+<classEntry path="com.stamen.twisted.DelayedCall"/>
+<classEntry path="com.stamen.twisted.Reactor"/>
+</includeClasses>
+<includeResources/>
+<namespaceManifests/>
+</flexLibProperties>
